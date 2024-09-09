@@ -1,0 +1,26 @@
+{
+  "name": "foc-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "This is an api that provides coupons codes for marketing requests",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ENV=dev node --watch index.js",
+    "create_db": "psql -p 5433 -U boardriders -d boardriders-foc -f ./app/data/create_tables.sql",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.10.0",
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0"
+  }
+}

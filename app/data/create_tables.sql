@@ -41,8 +41,9 @@ CREATE TABLE "user" (
     "password" VARCHAR(255) NOT NULL,
     "brand" TEXT NOT NULL,
     "facturation_code" TEXT NOT NULL,
-    "coupon_id" INT,
-    "freeshipping_id" INT,
+    "coupon_id" INTEGER[] DEFAULT '{}',
+    "role" TEXT NOT NULL,
+    "freeshipping_id" INTEGER[] DEFAULT '{}',
     FOREIGN KEY ("coupon_id") REFERENCES "coupon"("id"),
     FOREIGN KEY ("freeshipping_id") REFERENCES "freeshipping"("id")
     )

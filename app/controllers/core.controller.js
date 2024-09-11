@@ -23,7 +23,7 @@ export default class CoreController {
       const row = await this.mainDatamapper.findByPk(id);
 
       if (!row) {
-        throw new Error(`${this.entityName} not found`, 404, 'NOT_FOUND');
+        throw new Error();
       }
 
       return res.json(row);
@@ -38,7 +38,7 @@ export default class CoreController {
 
     try {
       if (!input) {
-        throw new Error('All fields required', 400, 'BAD_REQUEST');
+        throw new Error();
       }
 
       const row = await this.mainDatamapper.create(input);
@@ -54,7 +54,7 @@ export default class CoreController {
     const input = req.body;
     try {
       if (!input) {
-        return next(new Error('All fields required', 400, 'BAD_REQUEST'));
+        return next(new Error());
       }
 
       // to do vérifier si l'élément existe avant de l'update
@@ -78,7 +78,7 @@ export default class CoreController {
         return next(new Error(`${this.entityName} not found`, { status: 404 }));
       }
 
-      res.status(204).json({ message: `${this.entityName} deleted` });
+      res.status(204).json();
     } catch (error) {
       console.error(error);
       throw new Error();

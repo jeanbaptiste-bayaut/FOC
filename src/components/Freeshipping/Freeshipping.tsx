@@ -8,7 +8,7 @@ function Freeshipping() {
     nbcoupons: '',
   });
 
-  const [freeshipping, _] = useState({
+  const [freeshipping] = useState({
     brand_name: '',
     country_name: '',
     freeshipping_code: '',
@@ -77,6 +77,17 @@ function Freeshipping() {
           <option value="france">France</option>
           <option value="spain">Spain</option>
           <option value="germany">Germany</option>
+          <option value="england">England</option>
+          <option value="italy">Italy</option>
+          <option value="austria">Austria</option>
+          <option value="switzerland">Switzerland</option>
+          <option value="ireland">Ireland</option>
+          <option value="netherlands">Netherlands</option>
+          <option value="belgium">Belgium</option>
+          <option value="portugal">Portugal</option>
+          <option value="finland">Finland</option>
+          <option value="sweden">Sweden</option>
+          <option value="danemark">Danemark</option>
         </select>
         <select
           id="coupon-nbcoupons"
@@ -86,9 +97,11 @@ function Freeshipping() {
           onChange={handleChangeGetFreeshipping}
         >
           <option default-value="">Select number of coupons</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
+          {Array.from({ length: 10 }, (_, i) => (
+            <option key={i++} value={i++}>
+              {i++}
+            </option>
+          ))}
         </select>
         <button type="submit">Get coupons</button>
       </form>

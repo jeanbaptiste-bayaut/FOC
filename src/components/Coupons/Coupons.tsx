@@ -6,16 +6,20 @@ function Coupons() {
     brand: '',
     country: '',
     amount: '',
+    wetsuit: '',
     nbcoupons: '',
   });
 
-  const [coupons, _] = useState({
+  const [coupons] = useState({
     brand_name: '',
     country_name: '',
     coupon_amount: '',
     coupon_code: '',
     country_currency: '',
   });
+
+  const [wetsuitAmount, setWetsuitAmount] = useState(0);
+
   const [couponList, setCouponList] = useState([coupons]);
 
   const handleChangeGetCoupons = (
@@ -33,12 +37,20 @@ function Coupons() {
     e.preventDefault();
 
     const { brand, country, amount } = formDataCoupons;
+    let wetsuit = false;
+
+    if (amount.includes('wetsuit')) {
+      setWetsuitAmount(Number(amount.split('-')[0]));
+      wetsuit = true;
+    } else {
+      setWetsuitAmount(Number(amount));
+    }
 
     const nbcoupons = parseInt(formDataCoupons.nbcoupons);
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/coupon/${brand}/${country}/${amount}/${nbcoupons}`,
+        `http://localhost:3000/api/coupon/${brand}/${country}/${wetsuitAmount}/${nbcoupons}/${wetsuit}`,
         {
           withCredentials: true,
         }
@@ -80,6 +92,17 @@ function Coupons() {
           <option value="france">France</option>
           <option value="spain">Spain</option>
           <option value="germany">Germany</option>
+          <option value="england">England</option>
+          <option value="italy">Italy</option>
+          <option value="austria">Austria</option>
+          <option value="switzerland">Switzerland</option>
+          <option value="ireland">Ireland</option>
+          <option value="netherlands">Netherlands</option>
+          <option value="belgium">Belgium</option>
+          <option value="portugal">Portugal</option>
+          <option value="finland">Finland</option>
+          <option value="sweden">Sweden</option>
+          <option value="danemark">Danemark</option>
         </select>
         <select
           id="coupon-amount"
@@ -89,9 +112,25 @@ function Coupons() {
           onChange={handleChangeGetCoupons}
         >
           <option default-value="">Select amount</option>
+          {/* {Array.from({ length: 6 }, (_, i) => (
+            <option key={i++ * 100} value={i++ * 100}>
+              {i++ * 100}
+            </option>
+          ))} */}
           <option value="100">100</option>
           <option value="200">200</option>
+          <option value="300">300</option>
+          <option value="400">400</option>
+          <option value="500">500</option>
+          <option value="600">600</option>
+          <option value="800">800</option>
           <option value="1000">1000</option>
+          <option value="1500">1500</option>
+          <option value="2000">2000</option>
+          <option value="300-wetsuit">WETSUITS 300</option>
+          <option value="500-wetsuit">WETSUITS 500</option>
+          <option value="800-wetsuit">WETSUITS 800</option>
+          <option value="1000-wetsuit">WETSUITS 1000</option>
         </select>
         <select
           id="coupon-nbcoupons"
@@ -104,6 +143,13 @@ function Coupons() {
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
         </select>
         <button type="submit">Get coupons</button>
       </form>

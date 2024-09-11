@@ -8,6 +8,7 @@ export default class CouponDataMapper extends CoreDataMapper {
     country,
     nbcoupons,
     amount,
+    wetsuit,
     userId
   ) {
     const result = await this.client.query(
@@ -18,7 +19,8 @@ export default class CouponDataMapper extends CoreDataMapper {
           "brand"."name" AS "brand_name", 
           "coupon"."code" AS "coupon_code", 
           "coupon"."amount" AS "coupon_amount", 
-          "coupon"."status" AS "coupon_status", 
+          "coupon"."status" AS "coupon_status",
+          "coupon"."wetsuit" AS "coupon_wetsuit",
           "country"."currency" AS "country_currency"
       FROM 
           "coupon"
@@ -31,9 +33,10 @@ export default class CouponDataMapper extends CoreDataMapper {
           AND "brand"."name" =$1
           AND "country"."name" =$2
           AND "coupon"."amount" =$3
-      LIMIT $4;
+          AND "coupon"."wetsuit" =$4
+      LIMIT $5;
       `,
-      [brand, country, amount, nbcoupons]
+      [brand, country, amount, wetsuit, nbcoupons]
     );
 
     if (!result.rows.length) {
@@ -61,14 +64,16 @@ export default class CouponDataMapper extends CoreDataMapper {
       throw new Error('Coupon not redeemed');
     }
 
+    const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
+
     const userUpdate = await this.client.query(
       `
-          UPDATE "user"
-          SET "coupon_id" = $1
-          WHERE "id" = $2
+          UPDATE "coupon"
+          SET "user_id" = $1
+          WHERE "id" = ANY ($2::int[])
           RETURNING *
           `,
-      [couponIds, userId]
+      [userId, couponIdsArray]
     );
 
     if (userUpdate) {

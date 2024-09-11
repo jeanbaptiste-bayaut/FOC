@@ -4,7 +4,7 @@ export default class CouponController {
   static mainDatamapper = CouponDataMapper;
 
   static async getCouponByBrandCountry(req, res) {
-    const { brand, country, amount, nbcoupons } = req.params;
+    const { brand, country, amount, nbcoupons, wetsuit } = req.params;
     const userId = req.user.userId;
     try {
       const coupons = await CouponDataMapper.getCouponByBrandCountry(
@@ -12,6 +12,7 @@ export default class CouponController {
         country,
         nbcoupons,
         amount,
+        wetsuit,
         userId
       );
 

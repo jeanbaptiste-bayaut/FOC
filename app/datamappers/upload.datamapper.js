@@ -16,8 +16,8 @@ export default class UploadDatamapper extends CoreDataMapper {
         })
         .on('end', async () => {
           const query = `
-            INSERT INTO "coupon" ("code", "amount", "status", "country_id")
-            VALUES ($1, $2, $3, $4);
+            INSERT INTO "coupon" ("code", "amount", "status", "country_id", "wetsuit")
+            VALUES ($1, $2, $3, $4, $5);
             `;
 
           await Promise.all(
@@ -27,6 +27,7 @@ export default class UploadDatamapper extends CoreDataMapper {
                 row.amount,
                 row.status,
                 row.country_id,
+                row.wetsuit,
               ]);
             })
           );

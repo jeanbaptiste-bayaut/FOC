@@ -23,7 +23,10 @@ CREATE TABLE "coupon" (
     "amount" NUMERIC(10, 2) NOT NULL,
     "status" INT NOT NULL,
     "country_id" INT NOT NULL,
-    FOREIGN KEY ("country_id") REFERENCES "country"("id")
+    "wetsuit" TEXT default 'false',
+    "user_id" INT,
+    FOREIGN KEY ("country_id") REFERENCES "country"("id"),
+    FOREIGN KEY ("user_id") REFERENCES "user"("id")
 );
 
 -- Table FREESHIPPING
@@ -32,7 +35,9 @@ CREATE TABLE "freeshipping" (
     "code" VARCHAR(50) NOT NULL,
     "status" INT NOT NULL,
     "country_id" INT NOT NULL,
-    FOREIGN KEY ("country_id") REFERENCES "country"("id")
+    "user_id" INT,
+    FOREIGN KEY ("country_id") REFERENCES "country"("id"),
+    FOREIGN KEY ("user_id") REFERENCES "user"("id")
 );
 
 CREATE TABLE "user" (
@@ -41,11 +46,7 @@ CREATE TABLE "user" (
     "password" VARCHAR(255) NOT NULL,
     "brand" TEXT NOT NULL,
     "facturation_code" TEXT NOT NULL,
-    "coupon_id" INTEGER[] DEFAULT '{}',
     "role" TEXT NOT NULL,
-    "freeshipping_id" INTEGER[] DEFAULT '{}',
-    FOREIGN KEY ("coupon_id") REFERENCES "coupon"("id"),
-    FOREIGN KEY ("freeshipping_id") REFERENCES "freeshipping"("id")
     )
 
 COMMIT;

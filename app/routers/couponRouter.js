@@ -4,7 +4,7 @@ import authMiddleware from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 router
-  .route('/coupon/:brand/:country/:amount/:nbcoupons')
+  .route('/coupon/:brand/:country/:amount/:nbcoupons/:wetsuit')
   .get(
     authMiddleware.verifyToken,
     CouponController.getCouponByBrandCountry.bind(CouponController)

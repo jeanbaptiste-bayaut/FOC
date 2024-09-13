@@ -31,7 +31,7 @@ export default class UploadDatamapper extends CoreDataMapper {
               ]);
             })
           );
-          this.client.end();
+          //   this.client.end();
           return { success: 'File uploaded and processed successfully' };
         });
     } catch (error) {

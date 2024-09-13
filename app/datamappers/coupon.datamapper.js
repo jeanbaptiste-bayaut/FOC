@@ -64,6 +64,21 @@ export default class CouponDataMapper extends CoreDataMapper {
       throw new Error('Coupon not redeemed');
     }
 
+    const updateTime = await this.client.query(
+      `
+      UPDATE "coupon"
+      SET "updated_at" = current_timestamp
+      WHERE "id" IN (${couponIdsString})
+      RETURNING *
+      `
+    );
+
+    if (updateTime) {
+      console.log('Coupon time updated');
+    } else {
+      throw new Error('Coupon time not updated');
+    }
+
     const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
 
     const userUpdate = await this.client.query(

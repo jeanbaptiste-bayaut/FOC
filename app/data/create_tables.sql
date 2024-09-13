@@ -25,6 +25,8 @@ CREATE TABLE "coupon" (
     "country_id" INT NOT NULL,
     "wetsuit" TEXT default 'false',
     "user_id" INT,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP,
     FOREIGN KEY ("country_id") REFERENCES "country"("id"),
     FOREIGN KEY ("user_id") REFERENCES "user"("id")
 );

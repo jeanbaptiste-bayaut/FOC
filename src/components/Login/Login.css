@@ -1,0 +1,11 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  input {
+    padding: 8px 12px;
+    margin-block: 1em;
+  }
+}

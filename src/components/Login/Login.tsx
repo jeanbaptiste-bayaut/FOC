@@ -1,7 +1,11 @@
+import './Login.css';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,13 +32,19 @@ function Login() {
           withCredentials: true,
         }
       );
+
+      setFormData({ email: '', password: '' });
+
+      navigate('/coupons');
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      alert('Invalid credentials');
     }
   };
 
   return (
     <>
+      <h2>Enter your credentials</h2>
       <form className="login" onSubmit={handleSubmit}>
         <input
           type="email"

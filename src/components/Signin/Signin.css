@@ -1,0 +1,22 @@
+.signin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  small {
+    font-weight: 700 !important;
+  }
+
+  input {
+    padding: 8px 12px;
+    margin-block: 1em;
+    width: 250px;
+  }
+
+  select {
+    padding: 8px 12px;
+    margin-block: 1em;
+    width: 278px;
+  }
+}

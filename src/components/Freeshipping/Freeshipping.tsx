@@ -1,3 +1,4 @@
+import './Freeshipping.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -43,14 +44,27 @@ function Freeshipping() {
       );
 
       setCouponList(response.data);
+      setFormDataCoupons({
+        brand: '',
+        country: '',
+        nbcoupons: '',
+      });
+      document
+        .getElementById('freeshipping-coupons')
+        ?.classList.remove('inactive');
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmitGetFreeshipping}>
+    <div className="freeshipping-container">
+      <h2>Get free shipping coupons</h2>
+      <p>Fill the form to get freeshipping coupons</p>
+      <form
+        className="form-freeshipping"
+        onSubmit={handleSubmitGetFreeshipping}
+      >
         <select
           id="coupon-brand"
           name="brand"
@@ -97,15 +111,20 @@ function Freeshipping() {
           onChange={handleChangeGetFreeshipping}
         >
           <option default-value="">Select number of coupons</option>
-          {Array.from({ length: 10 }, (_, i) => (
-            <option key={i++} value={i++}>
-              {i++}
-            </option>
-          ))}
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
         </select>
         <button type="submit">Get coupons</button>
       </form>
-      <div id="coupons">
+      <div id="freeshipping-coupons" className="inactive">
         <table>
           <thead>
             <tr>
@@ -125,7 +144,7 @@ function Freeshipping() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
 

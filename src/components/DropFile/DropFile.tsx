@@ -1,3 +1,4 @@
+import './DropFile.css';
 import axios from 'axios';
 import React, { useState } from 'react';
 
@@ -11,7 +12,7 @@ function DropFile() {
     }
   };
 
-  const handleCsv = async (e: any) => {
+  const handleCsv = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!file) {

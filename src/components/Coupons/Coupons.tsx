@@ -1,3 +1,4 @@
+import './Coupons.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -18,8 +19,6 @@ function Coupons() {
     country_currency: '',
   });
 
-  const [wetsuitAmount, setWetsuitAmount] = useState(0);
-
   const [couponList, setCouponList] = useState([coupons]);
 
   const handleChangeGetCoupons = (
@@ -38,34 +37,45 @@ function Coupons() {
 
     const { brand, country, amount } = formDataCoupons;
     let wetsuit = false;
+    let amountToUse = formDataCoupons.amount;
 
     if (amount.includes('wetsuit')) {
-      setWetsuitAmount(Number(amount.split('-')[0]));
+      const amountWetsuit = amount.split('-')[0];
       wetsuit = true;
-    } else {
-      setWetsuitAmount(Number(amount));
+      amountToUse = amountWetsuit;
     }
 
     const nbcoupons = parseInt(formDataCoupons.nbcoupons);
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/coupon/${brand}/${country}/${wetsuitAmount}/${nbcoupons}/${wetsuit}`,
+        `http://localhost:3000/api/coupon/${brand}/${country}/${amountToUse}/${nbcoupons}/${wetsuit}`,
         {
           withCredentials: true,
         }
       );
 
       setCouponList(response.data);
-      console.log(couponList);
+      setFormDataCoupons({
+        brand: '',
+        country: '',
+        amount: '',
+        wetsuit: '',
+        nbcoupons: '',
+      });
+
+      document.getElementById('coupons')?.classList.remove('inactive');
+      console.log(document.getElementById('coupons'));
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmitGetCoupons}>
+    <div className="coupons-container">
+      <h2>Get your coupons</h2>
+      <p>Fill the form to get your coupons</p>
+      <form className="form-coupons" onSubmit={handleSubmitGetCoupons}>
         <select
           id="coupon-brand"
           name="brand"
@@ -112,11 +122,6 @@ function Coupons() {
           onChange={handleChangeGetCoupons}
         >
           <option default-value="">Select amount</option>
-          {/* {Array.from({ length: 6 }, (_, i) => (
-            <option key={i++ * 100} value={i++ * 100}>
-              {i++ * 100}
-            </option>
-          ))} */}
           <option value="100">100</option>
           <option value="200">200</option>
           <option value="300">300</option>
@@ -153,7 +158,7 @@ function Coupons() {
         </select>
         <button type="submit">Get coupons</button>
       </form>
-      <div id="coupons">
+      <div id="coupons" className="inactive">
         <table>
           <thead>
             <tr>
@@ -177,7 +182,7 @@ function Coupons() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import './DateRange.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DateRange } from 'react-date-range';
 import { format } from 'date-fns';
 import axios from 'axios';
@@ -14,27 +14,12 @@ import {
 
 function DateRangeTool() {
   const [openDate, setOpenDate] = useState(false);
-  const currentDate = new Date();
-  const currentDateFormated = format(new Date(), 'yyyy-MM-dd');
 
-  const threeMonthsAgo = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() - 3,
-    currentDate.getDate()
-  );
-
-  console.log('threeMonthsAgo:', threeMonthsAgo);
-
-  const threeMonthsAgoFormated = format(threeMonthsAgo, 'yyyy-MM-dd');
-  console.log('threeMonthsAgoFormated:', threeMonthsAgoFormated);
-
-  const [date, setDate] = useState([
-    {
-      startDate: threeMonthsAgo,
-      endDate: currentDate,
-      key: 'selection',
-    },
-  ]);
+  interface Range {
+    startDate: Date;
+    endDate: Date;
+    key: string;
+  }
 
   const [dataAmountByPeriod, setdataAmountByPeriod] = useState([
     {
@@ -44,7 +29,26 @@ function DateRangeTool() {
     },
   ]);
 
-  const getTimePeriodOpening = async () => {
+  const currentDate = new Date();
+  const currentDateFormated = format(new Date(), 'yyyy-MM-dd');
+
+  const threeMonthsAgo = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() - 3,
+    currentDate.getDate()
+  );
+
+  const threeMonthsAgoFormated = format(threeMonthsAgo, 'yyyy-MM-dd');
+
+  const [date, setDate] = useState<Range[]>([
+    {
+      startDate: threeMonthsAgo,
+      endDate: currentDate,
+      key: 'selection',
+    },
+  ]);
+
+  const getTimePeriodOpening = useCallback(async () => {
     try {
       const result = await axios.get(
         `http://localhost:3000/api/report/amount-by-period/${threeMonthsAgoFormated}/${currentDateFormated}`,
@@ -61,13 +65,13 @@ function DateRangeTool() {
     } catch (error) {
       console.error('Erreur:', error);
     }
-  };
+  }, [threeMonthsAgoFormated, currentDateFormated, dataAmountByPeriod]);
 
   // to do : changer la range des dates pour updater le report
 
   useEffect(() => {
     getTimePeriodOpening();
-  }, []);
+  }, [getTimePeriodOpening]);
 
   return (
     <section className="report-top">
@@ -80,8 +84,13 @@ function DateRangeTool() {
           <DateRange
             editableDateInputs={true}
             onChange={(item) => {
-              if (item.selection) {
-                setDate([item.selection]);
+              if (item.selection && item.selection.startDate) {
+                setDate([
+                  {
+                    ...date[0],
+                    startDate: item.selection.startDate,
+                  },
+                ]);
               }
             }}
             moveRangeOnFirstSelection={false}

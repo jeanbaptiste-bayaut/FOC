@@ -15,6 +15,7 @@ import Signin from './components/Signin/Signin.tsx';
 import './index.css';
 import DropFile from './components/DropFile/DropFile.tsx';
 import Report from './components/Report/Report.tsx';
+import Export from './components/Export/Export.tsx';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/coupons" element={<App />} />
       <Route path="/report" element={<Report />} />
       <Route path="/upload" element={<DropFile />} />
+      <Route path="/export" element={<Export />} />
     </Route>
   )
 );

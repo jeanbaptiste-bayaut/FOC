@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/react-csv": "^1.1.10",
     "axios": "^1.7.7",
     "react": "^18.3.1",
+    "react-csv": "^2.2.2",
     "react-date-range": "^2.0.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",

@@ -11,6 +11,7 @@ function Signin() {
     password: '',
     brand: '',
     facturation: '',
+    role: '',
   });
 
   const handleChangeSigninin = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ function Signin() {
           password: formDataSignin.password,
           brand: formDataSignin.brand,
           facturation_code: formDataSignin.facturation,
+          role: formDataSignin.role,
         },
         {
           withCredentials: true,
@@ -92,6 +94,15 @@ function Signin() {
           onChange={handleChangeSigninin}
           required
           placeholder="facturation"
+        />
+        <input
+          type="text"
+          id="role"
+          name="role"
+          value={formDataSignin.role}
+          onChange={handleChangeSigninin}
+          required
+          placeholder="role"
         />
 
         <button type="submit">Submit</button>

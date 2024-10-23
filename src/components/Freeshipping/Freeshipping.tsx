@@ -1,8 +1,18 @@
 import './Freeshipping.css';
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+interface ErrorResponse {
+  message: string;
+}
 
 function Freeshipping() {
+  const [state, setState] = useState({
+    value: '',
+    copied: false,
+  });
+
   const [formDataFreeshipping, setFormDataCoupons] = useState({
     brand: '',
     country: '',
@@ -14,6 +24,8 @@ function Freeshipping() {
     country_name: '',
     freeshipping_code: '',
   });
+
+  const [couponCopyToClipboard] = useState([freeshipping.freeshipping_code]);
 
   const [couponList, setCouponList] = useState([freeshipping]);
 
@@ -31,6 +43,11 @@ function Freeshipping() {
   ) => {
     e.preventDefault();
 
+    setState({ value: '', copied: false });
+
+    // TO DO vérifier pourquoi le state.value ne se vide pas quand on submit le formulaire
+    console.log('ici', state.value);
+
     const { brand, country } = formDataFreeshipping;
 
     const nbcoupons = parseInt(formDataFreeshipping.nbcoupons);
@@ -44,23 +61,38 @@ function Freeshipping() {
       );
 
       setCouponList(response.data);
+
+      response.data.map((coupon: { freeshipping_code: string }) =>
+        couponCopyToClipboard.push(coupon.freeshipping_code)
+      );
+
+      setState({
+        value: couponCopyToClipboard.toString().replace(/,/g, '\n'),
+        copied: false,
+      });
+
       setFormDataCoupons({
         brand: '',
         country: '',
         nbcoupons: '',
       });
+
       document
         .getElementById('freeshipping-coupons')
         ?.classList.remove('inactive');
     } catch (error) {
-      console.error(error);
+      const axiosError = error as AxiosError<ErrorResponse>;
+
+      const errorMessage =
+        axiosError.response?.data?.message || axiosError.message;
+      alert(`${errorMessage} please contact the administrator`);
+      throw new Error(errorMessage);
     }
   };
 
   return (
     <div className="freeshipping-container">
       <h2>Get free shipping coupons</h2>
-      <p>Fill the form to get freeshipping coupons</p>
       <form
         className="form-freeshipping"
         onSubmit={handleSubmitGetFreeshipping}
@@ -143,7 +175,19 @@ function Freeshipping() {
             ))}
           </tbody>
         </table>
+        <CopyToClipboard
+          text={state.value}
+          onCopy={() => {
+            setState({
+              value: state.value,
+              copied: true,
+            });
+          }}
+        >
+          <button>Copy coupons to clipboard</button>
+        </CopyToClipboard>
       </div>
+      <span>{state.copied ? 'Copied!' : ''}</span>
     </div>
   );
 }

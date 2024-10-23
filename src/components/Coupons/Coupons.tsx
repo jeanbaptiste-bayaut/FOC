@@ -1,8 +1,18 @@
 import './Coupons.css';
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+interface ErrorResponse {
+  message: string;
+}
 
 function Coupons() {
+  const [state, setState] = useState({
+    value: '',
+    copied: false,
+  });
+
   const [formDataCoupons, setFormDataCoupons] = useState({
     brand: '',
     country: '',
@@ -20,6 +30,7 @@ function Coupons() {
   });
 
   const [couponList, setCouponList] = useState([coupons]);
+  const [couponCopyToClipboard] = useState([coupons.coupon_code]);
 
   const handleChangeGetCoupons = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -34,6 +45,8 @@ function Coupons() {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+
+    setState({ value: '', copied: false });
 
     const { brand, country, amount } = formDataCoupons;
     let wetsuit = false;
@@ -56,6 +69,16 @@ function Coupons() {
       );
 
       setCouponList(response.data);
+
+      response.data.map((coupon: { coupon_code: string }) =>
+        couponCopyToClipboard.push(coupon.coupon_code)
+      );
+
+      setState({
+        value: couponCopyToClipboard.toString().replace(/,/g, '\n'),
+        copied: false,
+      });
+
       setFormDataCoupons({
         brand: '',
         country: '',
@@ -65,16 +88,19 @@ function Coupons() {
       });
 
       document.getElementById('coupons')?.classList.remove('inactive');
-      console.log(document.getElementById('coupons'));
     } catch (error) {
-      console.error(error);
+      const axiosError = error as AxiosError<ErrorResponse>;
+
+      const errorMessage =
+        axiosError.response?.data?.message || axiosError.message;
+      alert(`${errorMessage} please contact the administrator`);
+      throw new Error(errorMessage);
     }
   };
 
   return (
     <div className="coupons-container">
-      <h2>Get your coupons</h2>
-      <p>Fill the form to get your coupons</p>
+      <h2>Get your FOC coupons</h2>
       <form className="form-coupons" onSubmit={handleSubmitGetCoupons}>
         <select
           id="coupon-brand"
@@ -181,7 +207,19 @@ function Coupons() {
             ))}
           </tbody>
         </table>
+        <CopyToClipboard
+          text={state.value}
+          onCopy={() => {
+            setState({
+              value: state.value,
+              copied: true,
+            });
+          }}
+        >
+          <button>Copy coupons to clipboard</button>
+        </CopyToClipboard>
       </div>
+      <span>{state.copied ? 'Copied!' : ''}</span>
     </div>
   );
 }

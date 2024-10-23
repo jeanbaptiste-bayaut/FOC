@@ -11,8 +11,9 @@ export default class CouponDataMapper extends CoreDataMapper {
     wetsuit,
     userId
   ) {
-    const result = await this.client.query(
-      `
+    try {
+      const result = await this.client.query(
+        `
       SELECT 
           "coupon"."id" AS "coupon_id",
           "country"."name" AS "country_name",
@@ -36,73 +37,78 @@ export default class CouponDataMapper extends CoreDataMapper {
           AND "coupon"."wetsuit" =$4
       LIMIT $5;
       `,
-      [brand, country, amount, wetsuit, nbcoupons]
-    );
+        [brand, country, amount, wetsuit, nbcoupons]
+      );
 
-    if (!result.rows.length) {
-      throw new Error('No coupon available');
-    }
+      if (!result.rows.length) {
+        throw new Error('No coupon available');
+      }
 
-    const couponIds = result.rows.map((coupon) =>
-      parseInt(coupon.coupon_id, 10)
-    );
+      const couponIds = result.rows.map((coupon) =>
+        parseInt(coupon.coupon_id, 10)
+      );
 
-    const couponIdsString = couponIds.join(', ');
+      const couponIdsString = couponIds.join(', ');
 
-    const redemption = await this.client.query(
-      `
+      const redemption = await this.client.query(
+        `
       UPDATE "coupon"
       SET "status" = 1
       WHERE "id" IN (${couponIdsString})
       RETURNING *
       `
-    );
+      );
 
-    if (redemption) {
-      console.log('Coupon redeemed');
-    } else {
-      throw new Error('Coupon not redeemed');
-    }
+      if (redemption) {
+        console.log('Coupon redeemed');
+      } else {
+        throw new Error('Coupon not redeemed');
+      }
 
-    const updateTime = await this.client.query(
-      `
+      const updateTime = await this.client.query(
+        `
       UPDATE "coupon"
       SET "updated_at" = current_timestamp
       WHERE "id" IN (${couponIdsString})
       RETURNING *
       `
-    );
+      );
 
-    if (updateTime) {
-      console.log('Coupon time updated');
-    } else {
-      throw new Error('Coupon time not updated');
-    }
+      if (updateTime) {
+        console.log('Coupon time updated');
+      } else {
+        throw new Error('Coupon time not updated');
+      }
 
-    const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
+      const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
 
-    const userUpdate = await this.client.query(
-      `
+      const userUpdate = await this.client.query(
+        `
           UPDATE "coupon"
           SET "user_id" = $1
           WHERE "id" = ANY ($2::int[])
           RETURNING *
           `,
-      [userId, couponIdsArray]
-    );
+        [userId, couponIdsArray]
+      );
 
-    if (userUpdate) {
-      console.log('User updated');
-    } else {
-      throw new Error('User not updated');
+      if (userUpdate) {
+        console.log('User updated');
+      } else {
+        throw new Error('User not updated');
+      }
+
+      return result.rows;
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(error.message);
     }
-
-    return result.rows;
   }
 
   static async getFreeshippingByBrandCountry(brand, country, nbcoupons) {
-    const result = await this.client.query(
-      `
+    try {
+      const result = await this.client.query(
+        `
       SELECT 
           "country"."name" AS "country_name", 
           "brand"."name" AS "brand_name", 
@@ -120,29 +126,33 @@ export default class CouponDataMapper extends CoreDataMapper {
           AND "country"."name" =$2
       LIMIT $3;
       `,
-      [brand, country, nbcoupons]
-    );
+        [brand, country, nbcoupons]
+      );
 
-    if (!result.rows.length) {
-      throw new Error('No freeshipping available');
-    }
+      if (!result.rows.length) {
+        throw new Error('No freeshipping coupon available');
+      }
 
-    const couponIds = result.rows.map((coupon) => coupon.freeshipping_id);
-    const couponIdsString = couponIds.join(', ');
+      const couponIds = result.rows.map((coupon) => coupon.freeshipping_id);
+      const couponIdsString = couponIds.join(', ');
 
-    const redemption = await this.client.query(
-      `
+      const redemption = await this.client.query(
+        `
       UPDATE "freeshipping"
       SET "status" = 1
       WHERE "id" IN (${couponIdsString})
       RETURNING *
       `
-    );
+      );
 
-    if (redemption) {
-      console.log('Freeshipping redeemed');
+      if (redemption) {
+        console.log('Freeshipping redeemed');
+      }
+
+      return result.rows;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
     }
-
-    return result.rows;
   }
 }

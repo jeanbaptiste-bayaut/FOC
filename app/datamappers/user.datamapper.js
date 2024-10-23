@@ -22,16 +22,16 @@ export default class UserDataMapper extends CoreDatamapper {
     return result.rows[0];
   }
 
-  static async createUser(email, password, brand, facturation_code) {
+  static async createUser(email, password, brand, facturation_code, role) {
     const saltRound = 10;
 
     const hashedPassword = await bcrypt.hash(password, saltRound);
 
     const result = await this.client.query(
-      `INSERT INTO "user" ("email", "password", "brand", "facturation_code") 
-      VALUES ($1,$2,$3,$4)  
+      `INSERT INTO "user" ("email", "password", "brand", "facturation_code", "role") 
+      VALUES ($1,$2,$3,$4,$5)  
       RETURNING *`,
-      [email, hashedPassword, brand, facturation_code]
+      [email, hashedPassword, brand, facturation_code, role]
     );
 
     const { rows } = result;

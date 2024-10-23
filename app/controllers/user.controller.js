@@ -43,13 +43,14 @@ export default class UserController extends CoreController {
   }
 
   static async signin(req, res) {
-    const { email, password, brand, facturation_code } = req.body;
+    const { email, password, brand, facturation_code, role } = req.body;
     try {
       const user = await UserDataMapper.createUser(
         email,
         password,
         brand,
-        facturation_code
+        facturation_code,
+        role
       );
 
       return res.json(user);

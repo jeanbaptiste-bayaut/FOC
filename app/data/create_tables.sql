@@ -16,6 +16,16 @@ CREATE TABLE "country" (
     FOREIGN KEY ("brand_id") REFERENCES "brand"("id")
 );
 
+-- Table USER
+CREATE TABLE "user" (
+    "id" SERIAL PRIMARY KEY,
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "brand" TEXT NOT NULL,
+    "facturation_code" TEXT NOT NULL,
+    "role" TEXT NOT NULL
+    );
+
 -- Table COUPON
 CREATE TABLE "coupon" (
     "id" SERIAL PRIMARY KEY,
@@ -41,14 +51,5 @@ CREATE TABLE "freeshipping" (
     FOREIGN KEY ("country_id") REFERENCES "country"("id"),
     FOREIGN KEY ("user_id") REFERENCES "user"("id")
 );
-
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "email" VARCHAR(255) NOT NULL,
-    "password" VARCHAR(255) NOT NULL,
-    "brand" TEXT NOT NULL,
-    "facturation_code" TEXT NOT NULL,
-    "role" TEXT NOT NULL,
-    )
 
 COMMIT;

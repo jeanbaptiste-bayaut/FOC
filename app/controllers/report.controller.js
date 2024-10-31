@@ -26,7 +26,6 @@ export default class ReportController extends CoreController {
 
   static async getAmountAndNbOfCouopnByTimePeriod(req, res) {
     const { startDate, endDate } = req.params;
-    console.log({ startDate, endDate });
 
     try {
       const report = await ReportDataMapper.getAmountAndNbOfCouopnByTimePeriod(

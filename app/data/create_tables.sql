@@ -21,10 +21,22 @@ CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "email" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
-    "brand" TEXT NOT NULL,
-    "facturation_code" TEXT NOT NULL,
+    "service" TEXT NOT NULL,
     "role" TEXT NOT NULL
     );
+
+CREATE TABLE "facturation_code" (
+    "id" SERIAL PRIMARY KEY,
+    "code" TEXT NOT NULL,
+)
+
+CREATE TABLE "user_has_facturation_code" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INT NOT NULL,
+    "facturation_code_id" INT NOT NULL,
+    FOREIGN KEY ("user_id") REFERENCES "user"("id"),
+    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id")
+);
 
 -- Table COUPON
 CREATE TABLE "coupon" (
@@ -35,10 +47,12 @@ CREATE TABLE "coupon" (
     "country_id" INT NOT NULL,
     "wetsuit" TEXT default 'false',
     "user_id" INT,
+    "facturation_code_id" INT,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP,
     FOREIGN KEY ("country_id") REFERENCES "country"("id"),
-    FOREIGN KEY ("user_id") REFERENCES "user"("id")
+    FOREIGN KEY ("user_id") REFERENCES "user"("id"),
+    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id")
 );
 
 -- Table FREESHIPPING

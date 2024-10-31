@@ -9,6 +9,7 @@ export default class CouponDataMapper extends CoreDataMapper {
     nbcoupons,
     amount,
     wetsuit,
+    facturationCode,
     userId
   ) {
     try {
@@ -48,48 +49,28 @@ export default class CouponDataMapper extends CoreDataMapper {
         parseInt(coupon.coupon_id, 10)
       );
 
-      const couponIdsString = couponIds.join(', ');
-
-      const redemption = await this.client.query(
-        `
-      UPDATE "coupon"
-      SET "status" = 1
-      WHERE "id" IN (${couponIdsString})
-      RETURNING *
-      `
-      );
-
-      if (redemption) {
-        console.log('Coupon redeemed');
-      } else {
-        throw new Error('Coupon not redeemed');
-      }
-
-      const updateTime = await this.client.query(
-        `
-      UPDATE "coupon"
-      SET "updated_at" = current_timestamp
-      WHERE "id" IN (${couponIdsString})
-      RETURNING *
-      `
-      );
-
-      if (updateTime) {
-        console.log('Coupon time updated');
-      } else {
-        throw new Error('Coupon time not updated');
-      }
-
       const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
+
+      const facturationCodeId = await this.client.query(
+        `SELECT "id" FROM "facturation_code" WHERE "code" = $1`,
+        [facturationCode]
+      );
+
+      if (!facturationCodeId.rows.length) {
+        throw new Error('Facturation code not found');
+      }
 
       const userUpdate = await this.client.query(
         `
           UPDATE "coupon"
-          SET "user_id" = $1
-          WHERE "id" = ANY ($2::int[])
+          SET "user_id" = $1,
+          "facturation_code_id" = $2,
+          "status" = 1,
+          "updated_at" = current_timestamp
+          WHERE "id" = ANY ($3::int[])
           RETURNING *
           `,
-        [userId, couponIdsArray]
+        [userId, facturationCodeId.rows[0].id, couponIdsArray]
       );
 
       if (userUpdate) {

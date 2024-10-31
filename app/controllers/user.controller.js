@@ -22,7 +22,7 @@ export default class UserController extends CoreController {
     try {
       const user = await UserDataMapper.login(email, password);
 
-      const userId = user.id;
+      const userId = user.user.id;
 
       const token = jwt.sign(
         { email: email, userId: userId },
@@ -36,20 +36,25 @@ export default class UserController extends CoreController {
         // sameSite: 'Lax',
       });
 
-      return res.json({ userId, token });
+      return res.json({
+        userId,
+        token,
+        facturationCodeList: user.facturationCodeList,
+      });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   }
 
   static async signin(req, res) {
-    const { email, password, brand, facturation_code, role } = req.body;
+    const { email, password, service, facturationCodeList, role } = req.body;
+
     try {
       const user = await UserDataMapper.createUser(
         email,
         password,
-        brand,
-        facturation_code,
+        service,
+        facturationCodeList,
         role
       );
 

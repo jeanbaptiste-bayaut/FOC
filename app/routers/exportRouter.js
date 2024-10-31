@@ -7,7 +7,7 @@ router
   .route('/export/:startDate/:endDate')
   .get(
     authMiddleware.verifyToken,
-    ExportController.getCouponsByTimePeriod.bind(ExportController)
+    ExportController.exportCoupons.bind(ExportController)
   );
 
 export default router;

@@ -1,0 +1,16 @@
+.export {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.btn-select-time-range {
+  cursor: pointer;
+  background-color: rgb(88, 89, 90);
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-bottom: 1em;
+}

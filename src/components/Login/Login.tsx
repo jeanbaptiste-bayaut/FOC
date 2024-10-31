@@ -22,7 +22,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      await axios.post(
+      const user = await axios.post(
         'http://localhost:3000/api/login',
         {
           email: formData.email,
@@ -34,6 +34,8 @@ function Login() {
       );
 
       setFormData({ email: '', password: '' });
+
+      localStorage.setItem('factuCode', user.data.facturationCodeList);
 
       navigate('/coupons');
     } catch (error) {

@@ -11,10 +11,6 @@ function Export() {
     endDate: Date;
     key: 'selection';
   }
-  const csvData = [
-    { name: 'John Doe', age: 33, email: 'dzedzed' },
-    { name: 'Jane Doe', age: 31, email: 'zedzdzed' },
-  ];
 
   const [timeRange, setTimeRange] = useState<Range[]>([
     {
@@ -24,35 +20,59 @@ function Export() {
     },
   ]);
 
-  const exportCsv = async () => {
+  const [csvData, setCsvData] = useState([]);
+  const [openDate, setOpenDate] = useState(false);
+  const [validateTimeRange, setValidateTimeRange] = useState(false);
+
+  const handleSelectBtn = () => {
+    setOpenDate(!openDate);
+  };
+
+  const handleChangeDate = async () => {
     const startDate = format(timeRange[0].startDate, 'yyyy-MM-dd');
     const endDate = format(timeRange[0].endDate, 'yyyy-MM-dd');
 
-    console.log(startDate, endDate);
-
     const result = await axios.get(
-      `http://localhost:3000/export/${startDate}/${endDate}`,
+      `http://localhost:3000/api/export/${startDate}/${endDate}`,
       { withCredentials: true }
     );
 
-    return result;
+    setCsvData(result.data);
+    setOpenDate(false);
+    setValidateTimeRange(true);
   };
 
-  useEffect(() => {
-    exportCsv();
-  }, []);
-
   return (
-    <div className="Export">
+    <div className="export">
       <h1>Export</h1>
-      <div>Select time range</div>
-      <DateRange
-        editableDateInputs={true}
-        onChange={(item) => setTimeRange([item.selection])}
-        moveRangeOnFirstSelection={false}
-        ranges={timeRange}
-      />
-      <CSVLink data={csvData}>Download me</CSVLink>
+      <div className="btn-select-time-range" onClick={handleSelectBtn}>
+        Select time range
+      </div>
+      {openDate ? (
+        <>
+          <DateRange
+            editableDateInputs={true}
+            onChange={(item) => setTimeRange([item.selection])}
+            moveRangeOnFirstSelection={false}
+            ranges={timeRange}
+          />
+          <button onClick={handleChangeDate}>Validate</button>
+        </>
+      ) : null}
+
+      {validateTimeRange ? (
+        <CSVLink
+          data={csvData}
+          filename={`foc-export-${format(
+            timeRange[0].startDate,
+            'yyyy-MM-dd'
+          )}-${format(timeRange[0].endDate, 'yyyy-MM-dd')}.csv`}
+        >
+          Download CSV from <br />
+          {format(timeRange[0].startDate, 'yyyy-MM-dd')} to{' '}
+          {format(timeRange[0].endDate, 'yyyy-MM-dd')}
+        </CSVLink>
+      ) : null}
     </div>
   );
 }

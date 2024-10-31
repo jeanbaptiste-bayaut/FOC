@@ -23,7 +23,7 @@ function Report() {
     },
   ]);
 
-  const getNbCouopnsByAmountByBrand = async () => {
+  const getNbCouponsByAmountByBrand = async () => {
     try {
       const result = await axios.get(
         `http://localhost:3000/api/report/coupons-by-amount`,
@@ -37,7 +37,7 @@ function Report() {
   };
 
   useEffect(() => {
-    getNbCouopnsByAmountByBrand();
+    getNbCouponsByAmountByBrand();
   }, []);
 
   const quikReport = dataCouponsByBrand.filter(
@@ -90,10 +90,12 @@ function Report() {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="amount" />
-              <YAxis />
+              <YAxis dataKey="count" />
               <Tooltip />
-              <Legend payload={[{ value: 'Sum in €', type: 'line' }]} />
-              <Bar dataKey="sum" fill="#82ca9d" barSize={20} />
+              <Legend
+                payload={[{ value: 'Coupoun amount in €', type: 'line' }]}
+              />
+              <Bar dataKey="count" fill="#82ca9d" barSize={20} />
             </BarChart>
           </div>
         ))}

@@ -71,7 +71,8 @@ function DateRangeTool() {
 
   useEffect(() => {
     getTimePeriodOpening();
-  }, [getTimePeriodOpening]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section className="report-top">

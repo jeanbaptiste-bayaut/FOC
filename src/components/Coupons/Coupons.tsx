@@ -19,6 +19,7 @@ function Coupons() {
     amount: '',
     wetsuit: '',
     nbcoupons: '',
+    facturationCode: '',
   });
 
   const [coupons] = useState({
@@ -28,6 +29,8 @@ function Coupons() {
     coupon_code: '',
     country_currency: '',
   });
+
+  const facturationCodeList = localStorage.getItem('factuCode')?.split(',');
 
   const [couponList, setCouponList] = useState([coupons]);
   const [couponCopyToClipboard] = useState([coupons.coupon_code]);
@@ -48,7 +51,7 @@ function Coupons() {
 
     setState({ value: '', copied: false });
 
-    const { brand, country, amount } = formDataCoupons;
+    const { brand, country, amount, facturationCode } = formDataCoupons;
     let wetsuit = false;
     let amountToUse = formDataCoupons.amount;
 
@@ -62,7 +65,7 @@ function Coupons() {
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/coupon/${brand}/${country}/${amountToUse}/${nbcoupons}/${wetsuit}`,
+        `http://localhost:3000/api/coupon/${brand}/${country}/${amountToUse}/${nbcoupons}/${wetsuit}/${facturationCode}`,
         {
           withCredentials: true,
         }
@@ -85,6 +88,7 @@ function Coupons() {
         amount: '',
         wetsuit: '',
         nbcoupons: '',
+        facturationCode: '',
       });
 
       document.getElementById('coupons')?.classList.remove('inactive');
@@ -139,6 +143,20 @@ function Coupons() {
           <option value="finland">Finland</option>
           <option value="sweden">Sweden</option>
           <option value="danemark">Danemark</option>
+        </select>
+        <select
+          id="facturationCode"
+          name="facturationCode"
+          required
+          value={formDataCoupons.facturationCode}
+          onChange={handleChangeGetCoupons}
+        >
+          <option default-value="">Seelct a facturation code</option>
+          {facturationCodeList?.map((facturation, index) => (
+            <option key={index} value={facturation}>
+              {facturation}
+            </option>
+          ))}
         </select>
         <select
           id="coupon-amount"

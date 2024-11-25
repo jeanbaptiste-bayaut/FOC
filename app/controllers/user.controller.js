@@ -23,6 +23,7 @@ export default class UserController extends CoreController {
       const user = await UserDataMapper.login(email, password);
 
       const userId = user.user.id;
+      const role = user.user.role;
 
       const token = jwt.sign(
         { email: email, userId: userId },
@@ -40,6 +41,8 @@ export default class UserController extends CoreController {
         userId,
         token,
         facturationCodeList: user.facturationCodeList,
+        role,
+        email,
       });
     } catch (error) {
       return res.status(500).json({ message: error.message });

@@ -78,11 +78,11 @@ export default class UserDataMapper extends CoreDatamapper {
 
   static async login(email, password) {
     const result = await this.client.query(
-      `SELECT "user"."id", "facturation_code"."code", "user"."email", "user"."password" FROM "user"
+      `SELECT "user"."id", "facturation_code"."code", "user"."email", "user"."password", "user"."role", "user"."email" FROM "user"
       JOIN "user_has_facturation_code" ON "user_has_facturation_code"."user_id" = "user"."id"
       JOIN "facturation_code" ON "facturation_code"."id" = "user_has_facturation_code"."facturation_code_id"
       WHERE "email" =$1
-      GROUP BY "user"."id", "facturation_code"."code";`,
+      GROUP BY "user"."id", "facturation_code"."code", "user"."role";`,
       [email]
     );
 

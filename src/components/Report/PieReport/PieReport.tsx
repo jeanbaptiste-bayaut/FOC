@@ -1,4 +1,4 @@
-import './PieReport.css';
+import './PieReport.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { PieChart, Pie } from 'recharts';

@@ -1,4 +1,4 @@
-import './Root.css';
+import './Root.scss';
 import Leftnav from '../components/Leftnav/Leftnav';
 import { Outlet } from 'react-router-dom';
 

@@ -12,7 +12,7 @@ import Root from './pages/Root.tsx';
 import App from './App.tsx';
 import Login from './components/Login/Login.tsx';
 import Signin from './components/Signin/Signin.tsx';
-import './index.css';
+import './index.scss';
 import DropFile from './components/DropFile/DropFile.tsx';
 import Report from './components/Report/Report.tsx';
 import Export from './components/Export/Export.tsx';

@@ -1,4 +1,4 @@
-import './Report.css';
+import './Report.scss';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import {

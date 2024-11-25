@@ -1,4 +1,4 @@
-import './Leftnav.css';
+import './Leftnav.scss';
 
 function Leftnav() {
   return (

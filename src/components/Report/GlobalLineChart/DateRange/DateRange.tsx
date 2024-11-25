@@ -1,4 +1,4 @@
-import './DateRange.css';
+import './DateRange.scss';
 import { useEffect, useState, useCallback } from 'react';
 import { DateRange } from 'react-date-range';
 import { format } from 'date-fns';

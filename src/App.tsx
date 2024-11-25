@@ -1,7 +1,6 @@
-import './App.css';
+import './App.scss';
 import Coupons from './components/Coupons/Coupons';
 import Freeshipping from './components/Freeshipping/Freeshipping';
-import Leftnav from './components/Leftnav/Leftnav';
 import useAxiosInterceptors from './service/axiosInterceptor';
 
 function App() {
@@ -9,7 +8,6 @@ function App() {
 
   return (
     <>
-      <Leftnav />
       <Coupons />
       <Freeshipping />
     </>

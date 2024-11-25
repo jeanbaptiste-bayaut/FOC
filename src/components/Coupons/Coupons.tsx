@@ -1,4 +1,4 @@
-import './Coupons.css';
+import './Coupons.scss';
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { CopyToClipboard } from 'react-copy-to-clipboard';

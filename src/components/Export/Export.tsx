@@ -1,4 +1,4 @@
-import './Export.css';
+import './Export.scss';
 import { CSVLink } from 'react-csv';
 import { DateRange } from 'react-date-range';
 import { useEffect, useState } from 'react';

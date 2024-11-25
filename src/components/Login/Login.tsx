@@ -2,6 +2,7 @@ import './Login.scss';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ function Login() {
     email: '',
     password: '',
   });
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -33,6 +35,16 @@ function Login() {
         }
       );
 
+      if (user.data) {
+        login({
+          userId: user.data.userId,
+          role: user.data.role,
+          email: user.data.email,
+        });
+      } else {
+        alert('Invalid credentials');
+      }
+
       setFormData({ email: '', password: '' });
 
       localStorage.setItem('factuCode', user.data.facturationCodeList);
@@ -46,8 +58,8 @@ function Login() {
 
   return (
     <>
-      <h2>Enter your credentials</h2>
       <form className="login" onSubmit={handleSubmit}>
+        <h2>Enter your credentials</h2>
         <input
           type="email"
           id="login-email"

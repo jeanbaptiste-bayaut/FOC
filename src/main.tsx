@@ -1,12 +1,12 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-
 import {
   Route,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
+import RoleRoute from './service/RoleRoute.tsx';
 
 import Root from './pages/Root.tsx';
 import App from './App.tsx';
@@ -16,6 +16,7 @@ import './index.scss';
 import DropFile from './components/DropFile/DropFile.tsx';
 import Report from './components/Report/Report.tsx';
 import Export from './components/Export/Export.tsx';
+import { AuthProvider } from './hooks/AuthContext.tsx';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,17 +26,54 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
       <Route path="/login" element={<Login />} />
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/coupons" element={<App />} />
-      <Route path="/report" element={<Report />} />
-      <Route path="/upload" element={<DropFile />} />
-      <Route path="/export" element={<Export />} />
+      <Route
+        path="/signin"
+        element={
+          <RoleRoute allowedRoles={['admin']}>
+            <Signin />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/coupons"
+        element={
+          <RoleRoute allowedRoles={['editor', 'admin', 'user']}>
+            <App />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/report"
+        element={
+          <RoleRoute allowedRoles={['editor', 'admin']}>
+            <Report />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/upload"
+        element={
+          <RoleRoute allowedRoles={['editor', 'admin']}>
+            <DropFile />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/export"
+        element={
+          <RoleRoute allowedRoles={['editor', 'admin']}>
+            <Export />
+          </RoleRoute>
+        }
+      />
     </Route>
   )
 );
 
 root.render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

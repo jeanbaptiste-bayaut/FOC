@@ -3,7 +3,7 @@ import './Leftnav.scss';
 function Leftnav() {
   return (
     <nav>
-      <a href="/">
+      <a href="/coupons">
         <h1>FOC REQUEST TOOL</h1>
       </a>
 

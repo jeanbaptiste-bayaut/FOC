@@ -33,7 +33,9 @@ function Coupons() {
   const facturationCodeList = localStorage.getItem('factuCode')?.split(',');
 
   const [couponList, setCouponList] = useState([coupons]);
-  const [couponCopyToClipboard] = useState([coupons.coupon_code]);
+  const [couponCopyToClipboard, setCouponCopyToClipboard] = useState([
+    coupons.coupon_code,
+  ]);
 
   const handleChangeGetCoupons = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -50,6 +52,7 @@ function Coupons() {
     e.preventDefault();
 
     setState({ value: '', copied: false });
+    setCouponCopyToClipboard([]);
 
     const { brand, country, amount, facturationCode } = formDataCoupons;
     let wetsuit = false;
@@ -73,9 +76,16 @@ function Coupons() {
 
       setCouponList(response.data);
 
-      response.data.map((coupon: { coupon_code: string }) =>
-        couponCopyToClipboard.push(coupon.coupon_code)
-      );
+      response.data.map((coupon: { coupon_code: string }) => {
+        console.log('coupon:', coupon);
+        couponCopyToClipboard.push(coupon.coupon_code);
+      });
+
+      if (couponCopyToClipboard[0] === '') {
+        couponCopyToClipboard.slice(1);
+      }
+
+      console.log(couponCopyToClipboard.toString().replace(/,/g, '\n'));
 
       setState({
         value: couponCopyToClipboard.toString().replace(/,/g, '\n'),
@@ -151,7 +161,7 @@ function Coupons() {
           value={formDataCoupons.facturationCode}
           onChange={handleChangeGetCoupons}
         >
-          <option default-value="">Seelct a facturation code</option>
+          <option default-value="">Select a facturation code</option>
           {facturationCodeList?.map((facturation, index) => (
             <option key={index} value={facturation}>
               {facturation}

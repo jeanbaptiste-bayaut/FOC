@@ -6,7 +6,7 @@ function Root() {
   return (
     <>
       <Leftnav />
-      <div className="root">
+      <div className="main">
         <Outlet />
       </div>
     </>

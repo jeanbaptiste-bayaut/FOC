@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
 
   small {
     font-weight: 700 !important;
@@ -18,5 +19,9 @@
     padding: 8px 12px;
     margin-block: 1em;
     width: 278px;
+  }
+
+  .addFacturation {
+    cursor: pointer;
   }
 }

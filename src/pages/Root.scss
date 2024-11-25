@@ -1,3 +1,11 @@
 #root {
-  display: flex;
+    display: flex;
+    text-align: center;
+
+    .main {
+      width: calc(100% - 230px);
+      margin-left: 250px;
+      place-items: center;
+      height: 100vh;
+    }
 }

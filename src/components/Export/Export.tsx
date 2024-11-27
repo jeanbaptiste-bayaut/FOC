@@ -1,17 +1,17 @@
 import './Export.scss';
 import { CSVLink } from 'react-csv';
 import { DateRange } from 'react-date-range';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import axios from 'axios';
 
-function Export() {
-  interface Range {
-    startDate: Date;
-    endDate: Date;
-    key: 'selection';
-  }
+interface Range {
+  startDate: Date;
+  endDate: Date;
+  key: 'selection';
+}
 
+function Export() {
   const [timeRange, setTimeRange] = useState<Range[]>([
     {
       startDate: new Date(),
@@ -52,7 +52,12 @@ function Export() {
         <>
           <DateRange
             editableDateInputs={true}
-            onChange={(item) => setTimeRange([item.selection])}
+            onChange={(item) => {
+              const { startDate, endDate } = item.selection;
+              if (startDate && endDate) {
+                setTimeRange([{ startDate, endDate, key: 'selection' }]);
+              }
+            }}
             moveRangeOnFirstSelection={false}
             ranges={timeRange}
           />

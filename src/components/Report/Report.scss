@@ -1,11 +1,52 @@
-.report-container {
+.summary {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  text-align: right;
+  padding: 0 2em;
+
+}
+.calendar{
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  p .date-picker-left{
+    border: 1px solid rgb(11, 91, 96);
+    padding: 0.5em 1em;
+    border-radius: 8px 0 0 8px;
+  }
+
+  p .date-picker-right{
+    border: 1px solid rgb(11, 91, 96);
+    padding: 0.5em 1em;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .rdrDefinedRangesWrapper {
+    color: black;
+
+    .rdrStaticRanges span{
+      color: rgb(69, 67, 67)!important;
+    }
+  }
+}
+
+.report-bars {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   grid-auto-columns: 1fr;
   gap: 1em 1em;
   grid-auto-flow: row;
   grid-template-areas:
     '. . . '
     '. . . ';
+}
+
+.report-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,20 +1,45 @@
 import './Report.scss';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
-import GlobalLlineChart from './GlobalLineChart/GlobalLineChart';
+import { DateRangePicker } from 'react-date-range';
+import { format, set } from 'date-fns';
+import { useState } from 'react';
+import GlobalLineChart from './GlobalLineChart/GlobalLineChart';
 import PieReport from './PieReport/PieReport';
+import BarsReport from './BarsReport/BarsReport';
+
+interface Range {
+  startDate: Date;
+  endDate: Date;
+  key: 'selection';
+}
+
+interface BarsReportProps {
+  name: string;
+  count: number;
+  amount: number;
+  sum: number;
+}
+
+interface PieReportProps {
+  name: string;
+  sum: number;
+  count: number;
+}
+
+interface BrandData {
+  count: number;
+  sum: number;
+}
+
+interface GlobalLineChartProps {
+  time: string;
+  brands: { [brand: string]: BrandData };
+}
 
 function Report() {
-  const [dataCouponsByBrand, setDataCouponsByBrand] = useState([
+  const [dataCouponsByBrand, setDataCouponsByBrand] = useState<
+    BarsReportProps[]
+  >([
     {
       name: '',
       count: 0,
@@ -23,86 +48,124 @@ function Report() {
     },
   ]);
 
-  const getNbCouponsByAmountByBrand = async () => {
+  const [dataAmountByBrand, setDataAmountByBrand] = useState<PieReportProps[]>([
+    {
+      name: '',
+      count: 0,
+      sum: 0,
+    },
+  ]);
+
+  const [total, setTotal] = useState([{ sum: 0, count: 0 }]);
+
+  const [dataAmountByPeriod, setDataAmountByPeriod] = useState<
+    GlobalLineChartProps[]
+  >([]);
+
+  const [openDate, setOpenDate] = useState(false);
+
+  const [date, setDate] = useState<Range[]>([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection',
+    },
+  ]);
+
+  const getDataForPeriod = async () => {
+    const startDateFormated = format(date[0].startDate, 'yyyy-MM-dd');
+    const endDateFormated = format(date[0].endDate, 'yyyy-MM-dd');
+
     try {
-      const result = await axios.get(
-        `http://localhost:3000/api/report/coupons-by-amount`,
+      const amountByPeriod = await axios.get(
+        `http://localhost:3000/api/report/amount-by-period/${startDateFormated}/${endDateFormated}`,
         { withCredentials: true }
       );
 
-      setDataCouponsByBrand(result.data);
+      const amountByBrand = await axios.get(
+        `http://localhost:3000/api/report/amount-by-brand/${startDateFormated}/${endDateFormated}`,
+        { withCredentials: true }
+      );
+
+      const coupopnsByAmount = await axios.get(
+        `http://localhost:3000/api/report/coupons-by-amount/${startDateFormated}/${endDateFormated}`,
+        { withCredentials: true }
+      );
+
+      amountByPeriod.data.forEach((element: { sum: number; count: number }) => {
+        element.sum = Number(element.sum);
+        element.count = Number(element.count);
+      });
+
+      amountByBrand.data.forEach((element: { sum: number; count: number }) => {
+        element.sum = Number(element.sum);
+        element.count = Number(element.count);
+      });
+
+      setDataAmountByPeriod(amountByPeriod.data);
+      setDataCouponsByBrand(coupopnsByAmount.data);
+      setDataAmountByBrand(amountByBrand.data);
+
+      const total = [{ sum: 0, count: 0 }];
+      amountByBrand.data.map((brand: { sum: number; count: number }) => {
+        total[0].sum += brand.sum;
+        total[0].count += brand.count;
+      });
+      setTotal(total);
     } catch (error) {
       console.error('Erreur:', error);
+      throw new Error(`Erreur: ${error}`);
     }
   };
-
-  useEffect(() => {
-    getNbCouponsByAmountByBrand();
-  }, []);
-
-  const quikReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'quiksilver'
-  );
-  const roxyReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'roxy'
-  );
-  const dcReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'quiksilver'
-  );
-  const bbgReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'roxy'
-  );
-  const eltReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'quiksilver'
-  );
-  const rvcaReport = dataCouponsByBrand.filter(
-    (coupon) => coupon.name === 'roxy'
-  );
-
-  const brands = [
-    { name: 'Quiksilver', report: quikReport },
-    { name: 'Roxy', report: roxyReport },
-    { name: 'Dcshoes', report: dcReport },
-    { name: 'Billabong', report: bbgReport },
-    { name: 'Element', report: eltReport },
-    { name: 'Rvca', report: rvcaReport },
-  ];
 
   return (
     <>
       <h1>Report</h1>
-      <GlobalLlineChart />
-      <div className="report-container">
-        {brands.map((brand) => (
-          <div className={brand.name}>
-            <h2>{brand.name}</h2>
-            <BarChart
-              key={brand.name}
-              width={400}
-              height={250}
-              data={brand.report} // Wrap the brand object in an array
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
+      <section className="report-top">
+        <div className="summary">
+          <p>
+            <span>Total amount: </span>
+            <span>{total[0].sum} €</span>
+          </p>
+          <p>
+            <span>Total number of coupons: </span>
+            <span>{total[0].count}</span>
+          </p>
+        </div>
+        <div className="calendar">
+          <p
+            onClick={() => {
+              setOpenDate(!openDate);
+              getDataForPeriod();
+            }}
+          >
+            <span className="date-picker-left">{`${format(
+              date[0].startDate,
+              'MM/dd/yyyy'
+            )}`}</span>
+            <span className="date-picker-right">{`${format(
+              date[0].endDate,
+              'MM/dd/yyy'
+            )}`}</span>
+          </p>
+          {openDate && (
+            <DateRangePicker
+              onChange={(range) => {
+                const { startDate, endDate } = range.selection;
+                if (startDate && endDate) {
+                  setDate([{ startDate, endDate, key: 'selection' }]);
+                }
               }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="amount" />
-              <YAxis dataKey="count" />
-              <Tooltip />
-              <Legend
-                payload={[{ value: 'Coupoun amount in €', type: 'line' }]}
-              />
-              <Bar dataKey="count" fill="#82ca9d" barSize={20} />
-            </BarChart>
-          </div>
-        ))}
-      </div>
-      <>
-        <PieReport />
-      </>
+              ranges={date}
+              className="date"
+            />
+          )}
+          <small>Click to select a time range click again to validate</small>
+        </div>
+      </section>
+      <GlobalLineChart dataAmountByPeriod={dataAmountByPeriod} />
+      <BarsReport dataCouponsByBrand={dataCouponsByBrand} />
+      <PieReport dataAmountByBrand={dataAmountByBrand} />
     </>
   );
 }

@@ -126,7 +126,7 @@ function Coupons() {
           <option default-value="">Choose a brand</option>
           <option value="quiksilver">Quiksilver</option>
           <option value="roxy">Roxy</option>
-          <option value="dc">DC</option>
+          <option value="dcshoes">DC</option>
           <option value="billabong">Billabong</option>
           <option value="element">Element</option>
           <option value="rvca">Rvca</option>

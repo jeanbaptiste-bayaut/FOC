@@ -4,14 +4,14 @@ import authMiddleware from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 router
-  .route('/report/coupons-by-amount')
+  .route('/report/coupons-by-amount/:startDate/:endDate')
   .get(
     authMiddleware.verifyToken,
     ReportController.getNbCouponsByAmountByBrand.bind(ReportController)
   );
 
 router
-  .route('/report/amount-by-brand')
+  .route('/report/amount-by-brand/:startDate/:endDate')
   .get(
     authMiddleware.verifyToken,
     ReportController.getAmountByBrand.bind(ReportController)

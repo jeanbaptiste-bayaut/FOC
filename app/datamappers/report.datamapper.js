@@ -4,6 +4,8 @@ export default class ReportDataMapper extends CoreDatamapper {
   static tableName = 'coupon';
 
   static async getNbCouponsByAmountByBrand(startDate, endDate) {
+    const startDateEndOfDay = `${startDate} 00:00:00`;
+    const endDateEndOfDay = `${endDate} 23:59:59`;
     const results = await this.client.query(
       `
 SELECT "brand"."name", "coupon"."amount", COUNT("coupon"."amount"), SUM("coupon"."amount") FROM "coupon"
@@ -14,13 +16,15 @@ WHERE "coupon"."updated_at" BETWEEN $1 AND $2
 GROUP BY "brand"."name","coupon"."amount"
 ORDER BY "coupon"."amount" DESC;
         `,
-      [startDate, endDate]
+      [startDateEndOfDay, endDateEndOfDay]
     );
 
     return results.rows;
   }
 
   static async getAmountByBrand(startDate, endDate) {
+    const startDateEndOfDay = `${startDate} 00:00:00`;
+    const endDateEndOfDay = `${endDate} 23:59:59`;
     const results = await this.client.query(
       `
 SELECT "brand"."name", SUM("coupon"."amount"), COUNT("coupon"."code") FROM "coupon"
@@ -30,12 +34,14 @@ JOIN "user" ON "coupon"."user_id" = "user"."id"
 WHERE "coupon"."updated_at" BETWEEN $1 AND $2
 GROUP BY "brand"."name";
         `,
-      [startDate, endDate]
+      [startDateEndOfDay, endDateEndOfDay]
     );
     return results.rows;
   }
 
   static async getAmountAndNbOfCouopnByTimePeriod(startDate, endDate) {
+    const startDateEndOfDay = `${startDate} 00:00:00`;
+    const endDateEndOfDay = `${endDate} 23:59:59`;
     const results = await this.client.query(
       `
 SELECT 
@@ -50,7 +56,7 @@ JOIN "user" ON "coupon"."user_id" = "user"."id"
 WHERE "coupon"."updated_at" BETWEEN $1 AND $2
 GROUP BY "time", "brand"."name";
         `,
-      [startDate, endDate]
+      [startDateEndOfDay, endDateEndOfDay]
     );
 
     return results.rows;

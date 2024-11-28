@@ -66,4 +66,7 @@ CREATE TABLE "freeshipping" (
     FOREIGN KEY ("user_id") REFERENCES "user"("id")
 );
 
+ALTER TABLE "coupon"
+ADD CONSTRAINT "unique_code_country" UNIQUE ("code", "country_id");
+
 COMMIT;

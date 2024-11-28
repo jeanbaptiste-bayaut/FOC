@@ -40,6 +40,8 @@ interface GlobalLineChartData {
 function Report() {
   useAxiosInterceptors();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [dataCouponsByBrand, setDataCouponsByBrand] = useState<
     BarsReportProps[]
   >([
@@ -86,24 +88,27 @@ function Report() {
   ]);
 
   const getDataForPeriod = async () => {
+    setIsLoading(true);
+
     const startDateFormated = format(date[0].startDate, 'yyyy-MM-dd');
     const endDateFormated = format(date[0].endDate, 'yyyy-MM-dd');
 
     try {
-      const amountByPeriod = await axios.get(
-        `http://localhost:3000/api/report/amount-by-period/${startDateFormated}/${endDateFormated}`,
-        { withCredentials: true }
-      );
-
-      const amountByBrand = await axios.get(
-        `http://localhost:3000/api/report/amount-by-brand/${startDateFormated}/${endDateFormated}`,
-        { withCredentials: true }
-      );
-
-      const coupopnsByAmount = await axios.get(
-        `http://localhost:3000/api/report/coupons-by-amount/${startDateFormated}/${endDateFormated}`,
-        { withCredentials: true }
-      );
+      const [amountByPeriod, amountByBrand, coupopnsByAmount] =
+        await Promise.all([
+          axios.get(
+            `http://localhost:3000/api/report/amount-by-period/${startDateFormated}/${endDateFormated}`,
+            { withCredentials: true }
+          ),
+          axios.get(
+            `http://localhost:3000/api/report/amount-by-brand/${startDateFormated}/${endDateFormated}`,
+            { withCredentials: true }
+          ),
+          axios.get(
+            `http://localhost:3000/api/report/coupons-by-amount/${startDateFormated}/${endDateFormated}`,
+            { withCredentials: true }
+          ),
+        ]);
 
       amountByPeriod.data.forEach((element: { sum: number; count: number }) => {
         element.sum = Number(element.sum);
@@ -125,6 +130,7 @@ function Report() {
         total[0].count += brand.count;
       });
       setTotal(total);
+      setIsLoading(false);
     } catch (error) {
       console.error('Erreur:', error);
       throw new Error(`Erreur: ${error}`);
@@ -176,6 +182,7 @@ function Report() {
           <small>Click to select a time range click again to validate</small>
         </div>
       </section>
+      {isLoading && <div className="loading">Loading...</div>}
       <GlobalLineChart dataAmountByPeriod={dataAmountByPeriod} />
       <BarsReport dataCouponsByBrand={dataCouponsByBrand} />
       <PieReport dataAmountByBrand={dataAmountByBrand} />

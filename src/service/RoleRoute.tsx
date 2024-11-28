@@ -4,7 +4,12 @@ import { useAuth } from '../hooks/AuthContext';
 
 interface RoleRouteProps {
   children: JSX.Element;
-  allowedRoles: Array<'admin' | 'editor' | 'user'>; // Adapter aux rôles définis
+  allowedRoles: Array<'admin' | 'editor' | 'user'>;
+}
+
+interface LocalStorageProps {
+  value: { userId: number; email: string; role: 'admin' | 'user' | 'editor' };
+  expiry: number;
 }
 
 interface UserFromLocalStorage {
@@ -15,24 +20,34 @@ interface UserFromLocalStorage {
 
 const RoleRoute: React.FC<RoleRouteProps> = ({ children, allowedRoles }) => {
   const { user } = useAuth();
-  const getUserFromLocalStorage = localStorage.getItem('user');
 
   let userFromLocalStorage: UserFromLocalStorage | null = null;
 
-  if (getUserFromLocalStorage) {
-    userFromLocalStorage = JSON.parse(getUserFromLocalStorage);
+  try {
+    const localStorageData = localStorage.getItem('user');
+    if (localStorageData) {
+      const parsedData: LocalStorageProps = JSON.parse(localStorageData);
+      if (parsedData.expiry && parsedData.expiry > new Date().getTime()) {
+        userFromLocalStorage = parsedData.value;
+      } else {
+        console.warn('Session expired or missing expiry');
+        localStorage.removeItem('user'); // Nettoyez les données expirées
+      }
+    }
+  } catch (error) {
+    console.error('Failed to parse localStorage data:', error);
+    localStorage.removeItem('user'); // Nettoyez en cas d'erreur
   }
 
-  if (!user && !userFromLocalStorage) {
-    // Redirigez si l'utilisateur n'est pas authentifié
+  const authenticatedUser = user || userFromLocalStorage;
+
+  if (!authenticatedUser) {
+    // Si aucun utilisateur n'est authentifié
     return <Navigate to="/login" />;
   }
 
-  if (
-    userFromLocalStorage &&
-    !allowedRoles.includes(userFromLocalStorage.role)
-  ) {
-    // Redirigez si le rôle ne correspond pas
+  if (!allowedRoles.includes(authenticatedUser.role)) {
+    // Si l'utilisateur authentifié n'a pas les permissions nécessaires
     alert('You are not allowed to access this page');
     return <Navigate to="/coupons" />;
   }

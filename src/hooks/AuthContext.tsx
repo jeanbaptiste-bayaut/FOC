@@ -28,7 +28,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Sauvegarde locale optionnelle
+
+    const item = {
+      value: userData,
+      expiry: new Date().getTime() + 7200000, // 2 heure
+    };
+
+    localStorage.setItem('user', JSON.stringify(item)); // Sauvegarde locale optionnelle
   };
 
   const logout = () => {

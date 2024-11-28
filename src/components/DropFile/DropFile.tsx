@@ -1,8 +1,11 @@
 import './DropFile.scss';
 import axios from 'axios';
 import React, { useState } from 'react';
+import useAxiosInterceptors from '../../service/axiosInterceptor';
 
 function DropFile() {
+  // intercept the response from the server if no token is provided or if the token is expired redirect to login
+  useAxiosInterceptors();
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,11 +41,15 @@ function DropFile() {
       );
 
       if (response) {
-        alert('Fichier CSV uploadé avec succès');
+        alert(response.data.message);
       } else {
         alert("Erreur lors de l'upload du fichier CSV");
       }
+      setFile(null);
+      (document.getElementById('uploadForm') as HTMLFormElement)?.reset();
     } catch (error) {
+      setFile(null);
+      (document.getElementById('uploadForm') as HTMLFormElement)?.reset();
       console.error('Erreur:', error);
       alert("Erreur lors de l'upload du fichier CSV");
     }

@@ -13,9 +13,9 @@ interface BrandData {
   sum: number;
 }
 
-interface DataByPeriod {
+interface GlobalLineChartData {
   time: string;
-  [brand: string]: BrandData | string;
+  brands: { [brand: string]: BrandData };
 }
 
 interface Brand {
@@ -37,7 +37,7 @@ const brandsList: BrandList[] = [
 ];
 
 interface GlobalLineChartProps {
-  dataAmountByPeriod: DataByPeriod[];
+  dataAmountByPeriod: GlobalLineChartData[];
 }
 
 const GlobalLineChart: FC<GlobalLineChartProps> = ({ dataAmountByPeriod }) => {

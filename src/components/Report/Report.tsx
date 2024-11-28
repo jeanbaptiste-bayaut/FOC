@@ -1,11 +1,12 @@
 import './Report.scss';
 import axios from 'axios';
 import { DateRangePicker } from 'react-date-range';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import { useState } from 'react';
 import GlobalLineChart from './GlobalLineChart/GlobalLineChart';
 import PieReport from './PieReport/PieReport';
 import BarsReport from './BarsReport/BarsReport';
+import useAxiosInterceptors from '../../service/axiosInterceptor';
 
 interface Range {
   startDate: Date;
@@ -31,12 +32,14 @@ interface BrandData {
   sum: number;
 }
 
-interface GlobalLineChartProps {
+interface GlobalLineChartData {
   time: string;
   brands: { [brand: string]: BrandData };
 }
 
 function Report() {
+  useAxiosInterceptors();
+
   const [dataCouponsByBrand, setDataCouponsByBrand] = useState<
     BarsReportProps[]
   >([
@@ -59,8 +62,18 @@ function Report() {
   const [total, setTotal] = useState([{ sum: 0, count: 0 }]);
 
   const [dataAmountByPeriod, setDataAmountByPeriod] = useState<
-    GlobalLineChartProps[]
-  >([]);
+    GlobalLineChartData[]
+  >([
+    {
+      time: '',
+      brands: {
+        brand: {
+          count: 0,
+          sum: 0,
+        },
+      },
+    },
+  ]);
 
   const [openDate, setOpenDate] = useState(false);
 

@@ -10,8 +10,11 @@ const useAxiosInterceptors = () => {
       return response; // If the response is successful, return it
     },
     (error) => {
+      console.log('1', error);
       if (error.response && error.response.status === 401) {
+        console.log('2', error.response);
         if (error.response.data.message === 'Token expired') {
+          console.log('3', error.response);
           // If the token is expired, redirect to login
           navigate('/login');
         }

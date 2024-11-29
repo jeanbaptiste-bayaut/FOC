@@ -42,11 +42,10 @@ export default class CouponDataMapper extends CoreDataMapper {
         [brand, country, amount, wetsuit, nbcoupons]
       );
 
-      if (!result.rows.length) {
-        throw new Error({
-          status: 404,
-          message: `No coupon available for amount ${amount}`,
-        });
+      if (result.rows.length === 0) {
+        const error = new Error(`No coupon available for amount ${amount}`);
+        error.status = 404;
+        throw error;
       }
 
       // get an array of coupon ids for the userUpdate
@@ -86,7 +85,10 @@ export default class CouponDataMapper extends CoreDataMapper {
 
       return result.rows;
     } catch (error) {
-      console.log(error.message);
+      if (error.status === 404) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -116,11 +118,10 @@ export default class CouponDataMapper extends CoreDataMapper {
         [brand, country, nbcoupons]
       );
 
-      if (!result.rows.length) {
-        throw new Error({
-          status: 404,
-          message: `No freeshipping coupon available`,
-        });
+      if (result.rows.length === 0) {
+        const error = new Error(`No freeshipping available`);
+        error.status = 404;
+        throw error;
       }
 
       // get an array of coupon ids for the userUpdate
@@ -147,7 +148,9 @@ export default class CouponDataMapper extends CoreDataMapper {
 
       return result.rows;
     } catch (error) {
-      console.error(error);
+      if (error.status === 404) {
+        throw error;
+      }
       throw new Error(error.message);
     }
   }

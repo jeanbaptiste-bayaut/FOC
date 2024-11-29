@@ -30,6 +30,7 @@ function Coupons() {
     country_currency: '',
   });
 
+  // Get the facturation code from the local storage
   const facturationCodeList = localStorage.getItem('factuCode')?.split(',');
 
   const [couponList, setCouponList] = useState([coupons]);
@@ -37,6 +38,7 @@ function Coupons() {
     coupons.coupon_code,
   ]);
 
+  // Function to handle the changes in the form
   const handleChangeGetCoupons = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -46,18 +48,25 @@ function Coupons() {
     });
   };
 
+  // Function to handle the submit of the form
   const handleSubmitGetCoupons = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
 
+    // initialize the copy to clipboard
     setState({ value: '', copied: false });
     setCouponCopyToClipboard([]);
 
     const { brand, country, amount, facturationCode } = formDataCoupons;
+
+    // Initialize the wetsuit status of the coupon to false
     let wetsuit = false;
+
     let amountToUse = formDataCoupons.amount;
 
+    // Check if the amount contains the word wetsuit
+    // If it does, split the amount and set the wetsuit status to true
     if (amount.includes('wetsuit')) {
       const amountWetsuit = amount.split('-')[0];
       wetsuit = true;
@@ -67,6 +76,7 @@ function Coupons() {
     const nbcoupons = parseInt(formDataCoupons.nbcoupons);
 
     try {
+      // Call to the get coupons endpoint
       const response = await axios.get(
         `http://localhost:3000/api/coupon/${brand}/${country}/${amountToUse}/${nbcoupons}/${wetsuit}/${facturationCode}`,
         {
@@ -74,24 +84,26 @@ function Coupons() {
         }
       );
 
+      // Set the coupon list with the response data
       setCouponList(response.data);
 
+      // Map the response data to get the coupon code and push it to the couponCopyToClipboard array
       response.data.map((coupon: { coupon_code: string }) => {
-        console.log('coupon:', coupon);
         couponCopyToClipboard.push(coupon.coupon_code);
       });
 
+      // Remove the first empty element of the couponCopyToClipboard array
       if (couponCopyToClipboard[0] === '') {
         couponCopyToClipboard.slice(1);
       }
 
-      console.log(couponCopyToClipboard.toString().replace(/,/g, '\n'));
-
+      // Set the state with the couponCopyToClipboard array
       setState({
         value: couponCopyToClipboard.toString().replace(/,/g, '\n'),
         copied: false,
       });
 
+      // Reset the form
       setFormDataCoupons({
         brand: '',
         country: '',
@@ -101,6 +113,7 @@ function Coupons() {
         facturationCode: '',
       });
 
+      // Show the coupons table
       document.getElementById('coupons')?.classList.remove('inactive');
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;

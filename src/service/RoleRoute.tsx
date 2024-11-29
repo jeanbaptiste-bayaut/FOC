@@ -24,30 +24,33 @@ const RoleRoute: React.FC<RoleRouteProps> = ({ children, allowedRoles }) => {
   let userFromLocalStorage: UserFromLocalStorage | null = null;
 
   try {
+    // Get the user from the local storage
     const localStorageData = localStorage.getItem('user');
+
+    // Check if the user is still authenticated
     if (localStorageData) {
       const parsedData: LocalStorageProps = JSON.parse(localStorageData);
       if (parsedData.expiry && parsedData.expiry > new Date().getTime()) {
         userFromLocalStorage = parsedData.value;
       } else {
         console.warn('Session expired or missing expiry');
-        localStorage.removeItem('user'); // Nettoyez les données expirées
+        localStorage.removeItem('user'); // Clean expired data
       }
     }
   } catch (error) {
     console.error('Failed to parse localStorage data:', error);
-    localStorage.removeItem('user'); // Nettoyez en cas d'erreur
+    localStorage.removeItem('user'); // Clean data
   }
 
   const authenticatedUser = user || userFromLocalStorage;
 
   if (!authenticatedUser) {
-    // Si aucun utilisateur n'est authentifié
+    // If there is no authenticated user redirect to login
     return <Navigate to="/login" />;
   }
 
   if (!allowedRoles.includes(authenticatedUser.role)) {
-    // Si l'utilisateur authentifié n'a pas les permissions nécessaires
+    // If user is not allowed to access the page, show an alert and redirect to coupons
     alert('You are not allowed to access this page');
     return <Navigate to="/coupons" />;
   }

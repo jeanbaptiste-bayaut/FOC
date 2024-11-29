@@ -13,6 +13,7 @@ function Login() {
   });
   const { login } = useAuth();
 
+  // Function to handle the changes in the form
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -24,6 +25,7 @@ function Login() {
     e.preventDefault();
 
     try {
+      // Call to the login endpoint
       const user = await axios.post(
         'http://localhost:3000/api/login',
         {
@@ -35,6 +37,7 @@ function Login() {
         }
       );
 
+      // If the user exists, save it in the context and redirect to the coupons page
       if (user.data) {
         login({
           userId: user.data.userId,
@@ -45,8 +48,10 @@ function Login() {
         alert('Invalid credentials');
       }
 
+      // Reset the form
       setFormData({ email: '', password: '' });
 
+      // Save the facturation code in the local storage
       localStorage.setItem('factuCode', user.data.facturationCodeList);
 
       navigate('/coupons');

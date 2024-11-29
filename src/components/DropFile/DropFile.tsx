@@ -8,6 +8,7 @@ function DropFile() {
   useAxiosInterceptors();
   const [file, setFile] = useState<File | null>(null);
 
+  // handle the file change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
@@ -15,6 +16,7 @@ function DropFile() {
     }
   };
 
+  // handle the csv file and send it to the server
   const handleCsv = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -23,12 +25,12 @@ function DropFile() {
       return;
     }
 
+    // Create a FormData object with the file
     const formData = new FormData();
     formData.append('csvFile', file);
 
-    console.log('formData:', formData);
-
     try {
+      // Call to the upload coupon endpoint
       const response = await axios.post(
         'http://localhost:3000/api/upload/coupon',
         formData,
@@ -46,9 +48,11 @@ function DropFile() {
         alert("Erreur lors de l'upload du fichier CSV");
       }
       setFile(null);
+      // Reset the form
       (document.getElementById('uploadForm') as HTMLFormElement)?.reset();
     } catch (error) {
       setFile(null);
+      // Reset the form
       (document.getElementById('uploadForm') as HTMLFormElement)?.reset();
       console.error('Erreur:', error);
       alert("Erreur lors de l'upload du fichier CSV");

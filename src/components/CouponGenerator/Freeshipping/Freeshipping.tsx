@@ -45,14 +45,12 @@ function Freeshipping() {
 
     setState({ value: '', copied: false });
 
-    // TO DO vérifier pourquoi le state.value ne se vide pas quand on submit le formulaire
-    console.log('ici', state.value);
-
     const { brand, country } = formDataFreeshipping;
 
     const nbcoupons = parseInt(formDataFreeshipping.nbcoupons);
 
     try {
+      // Call to the get freeshipping endpoint
       const response = await axios.get(
         `http://localhost:3000/api/freeshipping/${brand}/${country}/${nbcoupons}`,
         {
@@ -60,23 +58,28 @@ function Freeshipping() {
         }
       );
 
+      // Set the coupon list with the response data
       setCouponList(response.data);
 
+      // Map the response data to get the coupon code and push it to the couponCopyToClipboard array
       response.data.map((coupon: { freeshipping_code: string }) =>
         couponCopyToClipboard.push(coupon.freeshipping_code)
       );
 
+      // Set the state with the coupon codes and set the copied status to false
       setState({
         value: couponCopyToClipboard.toString().replace(/,/g, '\n'),
         copied: false,
       });
 
+      // Reset the form
       setFormDataCoupons({
         brand: '',
         country: '',
         nbcoupons: '',
       });
 
+      // Show the coupons table
       document
         .getElementById('freeshipping-coupons')
         ?.classList.remove('inactive');

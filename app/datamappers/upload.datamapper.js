@@ -8,7 +8,7 @@ export default class UploadDatamapper extends CoreDataMapper {
   static async uploadCoupons(filePath) {
     try {
       const results = [];
-      let createdCount = 0;
+      let createdCount = 0; // Counter for created coupons
 
       // Convert the stream process into a Promise
       await new Promise((resolve, reject) => {
@@ -19,6 +19,7 @@ export default class UploadDatamapper extends CoreDataMapper {
           })
           .on('end', async () => {
             try {
+              // Prepare the query
               const query = `
                 INSERT INTO "coupon" ("code", "amount", "status", "country_id", "wetsuit")
                 VALUES ($1, $2, $3, $4, $5)
@@ -38,7 +39,7 @@ export default class UploadDatamapper extends CoreDataMapper {
                   ]);
 
                   if (result.rows.length > 0) {
-                    createdCount += 1; // Incrémente si une ligne est insérée
+                    createdCount += 1; // +1 if a coupon is created
                   }
                 })
               );

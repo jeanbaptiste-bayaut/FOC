@@ -21,7 +21,11 @@ export default class CouponController {
 
       return res.json(coupons);
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      if (error.status === 404) {
+        return res.status(404).json({ message: error.message });
+      }
+
+      return res.status(500).json({ message: error });
     }
   }
 
@@ -36,7 +40,11 @@ export default class CouponController {
 
       return res.json(freeshipping);
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      if (error.status === 404) {
+        return res.status(404).json({ message: error.message });
+      }
+
+      return res.status(500).json({ message: error });
     }
   }
 }

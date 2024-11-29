@@ -3,6 +3,7 @@ import CoreDataMapper from './core.datamapper.js';
 export default class CouponDataMapper extends CoreDataMapper {
   static tableName = 'coupon';
 
+  // get coupons by brand, country, amount, wetsuit, facturationCode
   static async getCouponByBrandCountry(
     brand,
     country,
@@ -42,15 +43,18 @@ export default class CouponDataMapper extends CoreDataMapper {
       );
 
       if (!result.rows.length) {
-        throw new Error('No coupon available');
+        throw new Error({
+          status: 404,
+          message: `No coupon available for amount ${amount}`,
+        });
       }
 
+      // get an array of coupon ids for the userUpdate
       const couponIds = result.rows.map((coupon) =>
         parseInt(coupon.coupon_id, 10)
       );
 
-      const couponIdsArray = couponIds.map((coupon) => parseInt(coupon, 10));
-
+      // get the facturation_code_id from the requester
       const facturationCodeId = await this.client.query(
         `SELECT "id" FROM "facturation_code" WHERE "code" = $1`,
         [facturationCode]
@@ -60,6 +64,7 @@ export default class CouponDataMapper extends CoreDataMapper {
         throw new Error('Facturation code not found');
       }
 
+      // update the coupon list with the userId and facturation_code_id and set the status to 1 (used)
       const userUpdate = await this.client.query(
         `
           UPDATE "coupon"
@@ -70,7 +75,7 @@ export default class CouponDataMapper extends CoreDataMapper {
           WHERE "id" = ANY ($3::int[])
           RETURNING *
           `,
-        [userId, facturationCodeId.rows[0].id, couponIdsArray]
+        [userId, facturationCodeId.rows[0].id, couponIds]
       );
 
       if (userUpdate) {
@@ -88,6 +93,7 @@ export default class CouponDataMapper extends CoreDataMapper {
 
   static async getFreeshippingByBrandCountry(brand, country, nbcoupons) {
     try {
+      // get the freeshipping coupon by brand, country and nbcoupons
       const result = await this.client.query(
         `
       SELECT 
@@ -111,12 +117,19 @@ export default class CouponDataMapper extends CoreDataMapper {
       );
 
       if (!result.rows.length) {
-        throw new Error('No freeshipping coupon available');
+        throw new Error({
+          status: 404,
+          message: `No freeshipping coupon available`,
+        });
       }
 
+      // get an array of coupon ids for the userUpdate
       const couponIds = result.rows.map((coupon) => coupon.freeshipping_id);
+
+      // get a string from the array of coupon ids
       const couponIdsString = couponIds.join(', ');
 
+      // update the coupons and set the status to 1 (used)
       const redemption = await this.client.query(
         `
       UPDATE "freeshipping"
@@ -128,6 +141,8 @@ export default class CouponDataMapper extends CoreDataMapper {
 
       if (redemption) {
         console.log('Freeshipping redeemed');
+      } else {
+        throw new Error('Freeshipping not redeemed');
       }
 
       return result.rows;

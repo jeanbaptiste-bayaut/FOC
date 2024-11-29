@@ -33,8 +33,6 @@ export default class UserController extends CoreController {
 
       res.cookie('token', token, {
         httpOnly: true,
-        // secure: false,
-        // sameSite: 'Lax',
       });
 
       return res.json({
@@ -45,6 +43,12 @@ export default class UserController extends CoreController {
         email,
       });
     } catch (error) {
+      if (error.status === 404) {
+        return res.status(404).json({ message: error.message });
+      } else if (error.status === 400) {
+        return res.status(400).json({ message: error.message });
+      }
+
       return res.status(500).json({ message: error.message });
     }
   }

@@ -1,7 +1,9 @@
 import multer from 'multer';
 import path from 'path';
 
+// Multer configuration
 const storage = multer.diskStorage({
+  // Destination to store csv file
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
   },
@@ -13,6 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 
+// Validate file type
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'text/csv') {
     cb(null, true);
@@ -21,6 +24,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Init Upload
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,

@@ -1,14 +1,15 @@
 import jwt from 'jsonwebtoken';
 
 export default {
-  // token verification
+  // token verification for protected routes
   verifyToken(req, res, next) {
-    const cookies = req.headers.cookie.split(';');
+    const cookies = req.headers.cookie.split(';'); // get cookies from headers
 
-    let token = '';
+    let token = ''; // initialize token
 
     for (const cookie of cookies) {
       const [key, value] = cookie.trim().split('=');
+      // check if key is token and assign value to token
       if (key === 'token') {
         token = value;
       }
@@ -19,7 +20,10 @@ export default {
     }
 
     try {
+      // verify token
       const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+
+      // assign user data to req.user
       req.user = decoded;
       return next();
     } catch (err) {

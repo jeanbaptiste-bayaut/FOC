@@ -1,6 +1,4 @@
 import { UploadDatamapper } from '../datamappers/index.datamapper.js';
-// import fs from 'fs';
-// import csv from 'csv-parser';
 
 export default class UploadController {
   static mainDatamapper = UploadDatamapper;

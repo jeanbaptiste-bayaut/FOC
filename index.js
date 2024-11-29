@@ -6,6 +6,7 @@ import swaggerSpec from './swagger/swagger.js';
 
 const httpServer = createServer(app);
 
+// Serve the Swagger documentation at /api-docs
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 const PORT = process.env.PORT;

@@ -89,12 +89,12 @@ export default class UserDataMapper extends CoreDatamapper {
     const user = result.rows[0];
 
     if (!user) {
-      throw new Error();
+      throw new Error({ status: 404, message: 'User not found' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch === false) {
-      throw new Error();
+      throw new Error({ status: 400, message: 'email or password incorrect' });
     }
 
     delete user.password;

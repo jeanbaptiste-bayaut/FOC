@@ -50,6 +50,8 @@ export default class ReportController extends CoreController {
         endDate
       );
 
+      // report format from databse: [{time: '2021-01-01', name: 'roxy', count: 1, sum: 10}, {time: '2021-01-01', name: 'quiksilver', count: 1, sum: 10} ...]
+      // expected format format: [{time: '2021-01-01': {name: 'roxy', count: 1, sum: 10}, {name: 'quiksilver', count: 1, sum: 10} ...}]
       const ReportReduceByTime = report.reduce((acc, row) => {
         if (!acc[row.time]) {
           acc[row.time] = {};
@@ -72,12 +74,13 @@ export default class ReportController extends CoreController {
         }
       );
 
+      // even if there is no data for a brand at a specific time, we want to return 0 as value for count and sum
       const formattedData = reportFormatted.map((entry) => {
         const normalizedEntry = {
           time: entry.time,
         };
         brandsList.forEach((brand) => {
-          normalizedEntry[brand] = entry[brand] || { sum: 0, count: 0 }; // Valeur par défaut
+          normalizedEntry[brand] = entry[brand] || { sum: 0, count: 0 };
         });
 
         return normalizedEntry;

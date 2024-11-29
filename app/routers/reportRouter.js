@@ -3,6 +3,66 @@ import ReportController from '../controllers/report.controller.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 const router = express.Router();
 
+/**
+ * @swagger
+ * /report/coupons-by-amount/{startDate}/{endDate}:
+ *   get:
+ *     summary: Get number of coupons by amount by brand
+ *     tags: [Reports]
+ *     parameters:
+ *       - in: path
+ *         name: startDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Start date for the report
+ *       - in: path
+ *         name: endDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: End date for the report
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved report
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /report/amount-by-brand/{startDate}/{endDate}:
+ *   get:
+ *     summary: Get amount by brand
+ *     tags: [Reports]
+ *     parameters:
+ *       - in: path
+ *         name: startDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Start date for the report
+ *       - in: path
+ *         name: endDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: End date for the report
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved report
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+
 router
   .route('/report/coupons-by-amount/:startDate/:endDate')
   .get(
@@ -19,10 +79,6 @@ router
 
 router
   .route('/report/amount-by-period/:startDate/:endDate')
-  .post(
-    authMiddleware.verifyToken,
-    ReportController.getAmountAndNbOfCouopnByTimePeriod.bind(ReportController)
-  )
   .get(
     authMiddleware.verifyToken,
     ReportController.getAmountAndNbOfCouopnByTimePeriod.bind(ReportController)

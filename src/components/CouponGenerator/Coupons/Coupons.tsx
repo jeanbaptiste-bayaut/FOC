@@ -77,8 +77,16 @@ function Coupons() {
 
     try {
       // Call to the get coupons endpoint
-      const response = await axios.get(
-        `http://localhost:3000/api/coupon/${brand}/${country}/${amountToUse}/${nbcoupons}/${wetsuit}/${facturationCode}`,
+      const response = await axios.post(
+        `http://localhost:3000/api/coupon/`,
+        {
+          brand,
+          country,
+          amount: amountToUse,
+          wetsuit,
+          nbcoupons,
+          facturationCode,
+        },
         {
           withCredentials: true,
         }

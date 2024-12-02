@@ -34,8 +34,12 @@ function Export() {
     const startDate = format(timeRange[0].startDate, 'yyyy-MM-dd');
     const endDate = format(timeRange[0].endDate, 'yyyy-MM-dd');
 
-    const result = await axios.get(
-      `http://localhost:3000/api/export/${startDate}/${endDate}`,
+    const result = await axios.post(
+      `http://localhost:3000/api/export`,
+      {
+        startDate,
+        endDate,
+      },
       { withCredentials: true }
     );
 

@@ -96,16 +96,19 @@ function Report() {
     try {
       const [amountByPeriod, amountByBrand, coupopnsByAmount] =
         await Promise.all([
-          axios.get(
-            `http://localhost:3000/api/report/amount-by-period/${startDateFormated}/${endDateFormated}`,
+          axios.post(
+            `http://localhost:3000/api/report/amount-by-period`,
+            { startDate: startDateFormated, endDate: endDateFormated },
             { withCredentials: true }
           ),
-          axios.get(
-            `http://localhost:3000/api/report/amount-by-brand/${startDateFormated}/${endDateFormated}`,
+          axios.post(
+            `http://localhost:3000/api/report/amount-by-brand`,
+            { startDate: startDateFormated, endDate: endDateFormated },
             { withCredentials: true }
           ),
-          axios.get(
-            `http://localhost:3000/api/report/coupons-by-amount/${startDateFormated}/${endDateFormated}`,
+          axios.post(
+            `http://localhost:3000/api/report/coupons-by-amount`,
+            { startDate: startDateFormated, endDate: endDateFormated },
             { withCredentials: true }
           ),
         ]);

@@ -51,8 +51,13 @@ function Freeshipping() {
 
     try {
       // Call to the get freeshipping endpoint
-      const response = await axios.get(
-        `http://localhost:3000/api/freeshipping/${brand}/${country}/${nbcoupons}`,
+      const response = await axios.post(
+        `http://localhost:3000/api/freeshipping`,
+        {
+          brand,
+          country,
+          nbcoupons,
+        },
         {
           withCredentials: true,
         }

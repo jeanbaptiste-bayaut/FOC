@@ -45,8 +45,8 @@ const router = express.Router();
  */
 
 router
-  .route('/export/:startDate/:endDate')
-  .get(
+  .route('/export')
+  .post(
     authMiddleware.verifyToken,
     ExportController.exportCoupons.bind(ExportController)
   );

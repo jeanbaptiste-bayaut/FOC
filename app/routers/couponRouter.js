@@ -132,15 +132,15 @@ const router = express.Router();
  */
 
 router
-  .route('/coupon/:brand/:country/:amount/:nbcoupons/:wetsuit/:facturationCode')
-  .get(
+  .route('/coupon')
+  .post(
     authMiddleware.verifyToken,
     CouponController.getCouponByBrandCountry.bind(CouponController)
   );
 
 router
-  .route('/freeshipping/:brand/:country/:nbcoupons')
-  .get(
+  .route('/freeshipping')
+  .post(
     authMiddleware.verifyToken,
     CouponController.getFreeshippingByBrandCountry.bind(CouponController)
   );

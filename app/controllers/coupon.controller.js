@@ -5,7 +5,7 @@ export default class CouponController {
 
   static async getCouponByBrandCountry(req, res) {
     const { brand, country, amount, nbcoupons, wetsuit, facturationCode } =
-      req.params;
+      req.body;
     const userId = req.user.userId;
 
     try {
@@ -29,7 +29,7 @@ export default class CouponController {
   }
 
   static async getFreeshippingByBrandCountry(req, res) {
-    const { brand, country, nbcoupons } = req.params;
+    const { brand, country, nbcoupons } = req.body;
     try {
       const freeshipping = await CouponDataMapper.getFreeshippingByBrandCountry(
         brand,

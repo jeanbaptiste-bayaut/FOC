@@ -64,22 +64,22 @@ const router = express.Router();
  */
 
 router
-  .route('/report/coupons-by-amount/:startDate/:endDate')
-  .get(
+  .route('/report/coupons-by-amount')
+  .post(
     authMiddleware.verifyToken,
     ReportController.getNbCouponsByAmountByBrand.bind(ReportController)
   );
 
 router
-  .route('/report/amount-by-brand/:startDate/:endDate')
-  .get(
+  .route('/report/amount-by-brand')
+  .post(
     authMiddleware.verifyToken,
     ReportController.getAmountByBrand.bind(ReportController)
   );
 
 router
-  .route('/report/amount-by-period/:startDate/:endDate')
-  .get(
+  .route('/report/amount-by-period')
+  .post(
     authMiddleware.verifyToken,
     ReportController.getAmountAndNbOfCouopnByTimePeriod.bind(ReportController)
   );

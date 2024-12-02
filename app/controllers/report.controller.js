@@ -5,7 +5,7 @@ export default class ReportController extends CoreController {
   static mainDatamapper = ReportDataMapper;
 
   static async getNbCouponsByAmountByBrand(req, res) {
-    const { startDate, endDate } = req.params;
+    const { startDate, endDate } = req.body;
     try {
       const report = await ReportDataMapper.getNbCouponsByAmountByBrand(
         startDate,
@@ -19,7 +19,7 @@ export default class ReportController extends CoreController {
   }
 
   static async getAmountByBrand(req, res) {
-    const { startDate, endDate } = req.params;
+    const { startDate, endDate } = req.body;
     try {
       const report = await ReportDataMapper.getAmountByBrand(
         startDate,
@@ -33,7 +33,7 @@ export default class ReportController extends CoreController {
   }
 
   static async getAmountAndNbOfCouopnByTimePeriod(req, res) {
-    const { startDate, endDate } = req.params;
+    const { startDate, endDate } = req.body;
 
     const brandsList = [
       'roxy',

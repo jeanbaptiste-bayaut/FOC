@@ -71,6 +71,10 @@ import authMiddleware from '../middleware/auth.middleware.js';
  */
 router.route('/users').get(UserController.getAll.bind(UserController));
 
+router
+  .route('/users/email')
+  .post(UserController.getUserByEmail.bind(UserController));
+
 /**
  * @swagger
  * components:

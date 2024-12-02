@@ -65,7 +65,7 @@ export default class UserDataMapper extends CoreDatamapper {
 
   static async findByEmail(email) {
     const result = await this.client.query(
-      `SELECT * FROM ${this.tableName} WHERE "email" =$1`,
+      `SELECT * FROM "user" WHERE "email" =$1`,
       [email]
     );
     const user = result.rows[0];

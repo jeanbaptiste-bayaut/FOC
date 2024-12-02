@@ -17,6 +17,18 @@ export default class UserController extends CoreController {
     }
   }
 
+  static async getUserByEmail(req, res) {
+    const { email } = req.body;
+
+    try {
+      const user = await UserDataMapper.findByEmail(email);
+
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
   static async login(req, res) {
     const { email, password } = req.body;
     try {

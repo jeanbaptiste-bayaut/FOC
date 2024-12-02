@@ -8,6 +8,8 @@ function Signin() {
   useAxiosInterceptors();
   const navigate = useNavigate();
 
+  const [emailExists, setEmailExists] = useState(false);
+
   const [formDataSignin, setFormDataSignin] = useState({
     email: '',
     password: '',
@@ -47,6 +49,18 @@ function Signin() {
     e.preventDefault();
 
     try {
+      const checkIfEmailExists = await axios.post(
+        'http://localhost:3000/api/users/email',
+        {
+          email: formDataSignin.email,
+        },
+        { withCredentials: true }
+      );
+
+      if (checkIfEmailExists.data) {
+        setEmailExists(true);
+        return;
+      }
       // Call signin endpoint
       await axios.post(
         'http://localhost:3000/api/signin',
@@ -81,6 +95,7 @@ function Signin() {
         required
         placeholder="email"
       />
+      {emailExists && <p>Email already exists</p>}
       <input
         type="password"
         id="signin-password"

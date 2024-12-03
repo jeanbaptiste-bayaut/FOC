@@ -18,4 +18,8 @@ app.use(cookieParser());
 
 app.use(router);
 
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello, ES6 World!' });
+});
+
 export default app;

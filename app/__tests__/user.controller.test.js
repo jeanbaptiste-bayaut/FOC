@@ -19,44 +19,6 @@ class testController extends UserController {
 }
 
 describe('UserController', () => {
-  describe('getUserByID', () => {
-    beforeEach(() => {
-      testController.mainDatamapper.getUserById = jest.fn();
-      jest.spyOn(console, 'error').mockImplementation(() => {});
-    });
-
-    it('shoul return a user found by its id', async () => {
-      const req = mockRequest({ params: { id: 1 } });
-      const res = mockResponse();
-
-      const mockData = {
-        id: 1,
-        email: 'email@email.com',
-      };
-
-      testController.mainDatamapper.getUserById.mockResolvedValue(mockData);
-
-      await testController.getUserByID(req, res);
-
-      expect(res.json).toHaveBeenCalledWith(mockData);
-    });
-
-    it('should throw an error if id is missing', async () => {
-      const req = mockRequest({ params: { id: null } });
-      const res = mockResponse();
-
-      testController.mainDatamapper.getUserById.mockResolvedValue(null);
-
-      await expect(testController.getUserByID(req, res)).rejects.toThrow(
-        'Missing id'
-      );
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-  });
-
   describe('getUserByEmail', () => {
     beforeEach(() => {
       testController.mainDatamapper.findByEmail = jest.fn();

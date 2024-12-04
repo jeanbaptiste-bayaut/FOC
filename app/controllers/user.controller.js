@@ -5,22 +5,6 @@ import jwt from 'jsonwebtoken';
 export default class UserController extends CoreController {
   static mainDatamapper = UserDataMapper;
 
-  static async getUserByID(req, res) {
-    const { id } = req.params;
-
-    if (!id || id == null) {
-      throw new Error('Missing id');
-    }
-
-    try {
-      const user = await UserDataMapper.getUserById(id);
-
-      return res.json(user);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  }
-
   static async getUserByEmail(req, res) {
     const { email } = req.body;
 

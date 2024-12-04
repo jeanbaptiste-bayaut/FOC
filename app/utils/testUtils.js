@@ -15,6 +15,7 @@ export const mockResponse = () => {
     json: jest.fn().mockReturnThis(),
     send: jest.fn().mockReturnThis(),
     end: jest.fn().mockReturnThis(),
+    cookie: jest.fn().mockReturnThis(),
   };
   return res;
 };

@@ -7,6 +7,10 @@ export default class ExportController extends CoreController {
   static async exportCoupons(req, res) {
     const { startDate, endDate } = req.body;
 
+    if (!startDate || !endDate) {
+      throw new Error('Missing input data');
+    }
+
     try {
       const data = await this.mainDatamapper.getCouponsByTimePeriod(
         startDate,

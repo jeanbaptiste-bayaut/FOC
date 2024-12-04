@@ -8,6 +8,10 @@ export default class UserController extends CoreController {
   static async getUserByID(req, res) {
     const { id } = req.params;
 
+    if (!id || id == null) {
+      throw new Error('Missing id');
+    }
+
     try {
       const user = await UserDataMapper.getUserById(id);
 
@@ -19,6 +23,10 @@ export default class UserController extends CoreController {
 
   static async getUserByEmail(req, res) {
     const { email } = req.body;
+
+    if (!email) {
+      throw new Error('Missing email');
+    }
 
     try {
       const user = await UserDataMapper.findByEmail(email);
@@ -33,6 +41,10 @@ export default class UserController extends CoreController {
     const { email, password } = req.body;
     try {
       const user = await UserDataMapper.login(email, password);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
 
       const userId = user.user.id;
       const role = user.user.role;
@@ -67,6 +79,10 @@ export default class UserController extends CoreController {
 
   static async signin(req, res) {
     const { email, password, service, facturationCodeList, role } = req.body;
+
+    if (!email || !password || !service || !facturationCodeList || !role) {
+      throw new Error('Missing input data');
+    }
 
     try {
       const user = await UserDataMapper.createUser(

@@ -9,7 +9,6 @@ export default class UserDataMapper extends CoreDatamapper {
       `
             SELECT 
                 "user"."id" AS "user_id",
-                "user"."name" AS "user_name",
                 "user"."email" AS "user_email",
             FROM 
                 "user"

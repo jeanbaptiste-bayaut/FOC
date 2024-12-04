@@ -1,13 +1,13 @@
 import express from 'express';
-import UploadController from '../controllers/uplaod.controller.js';
+import UploadController from '../controllers/upload.controller.js';
 import upload from '../middleware/multerConfig.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 /* tags:
- *   name: Uplaod
- *   description: API to manage uplaod of coupons
+ *   name: Upload
+ *   description: API to manage upload of coupons
  */
 
 /**

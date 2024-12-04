@@ -8,6 +8,18 @@ export default class CouponController {
       req.body;
     const userId = req.user.userId;
 
+    if (
+      userId == null ||
+      !brand ||
+      !country ||
+      !amount ||
+      !nbcoupons ||
+      !wetsuit ||
+      !facturationCode
+    ) {
+      throw new Error('Input data is missing');
+    }
+
     try {
       const coupons = await CouponDataMapper.getCouponByBrandCountry(
         brand,
@@ -30,6 +42,10 @@ export default class CouponController {
 
   static async getFreeshippingByBrandCountry(req, res) {
     const { brand, country, nbcoupons } = req.body;
+
+    if (!brand || !country || !nbcoupons) {
+      throw new Error('Input data is missing');
+    }
     try {
       const freeshipping = await CouponDataMapper.getFreeshippingByBrandCountry(
         brand,

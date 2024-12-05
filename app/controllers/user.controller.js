@@ -69,6 +69,12 @@ export default class UserController extends CoreController {
     }
 
     try {
+      const checkIfEmailExists = await UserDataMapper.getUserByEmail(email);
+
+      if (checkIfEmailExists) {
+        throw new Error('Email already exists');
+      }
+
       const user = await UserDataMapper.createUser(
         email,
         password,

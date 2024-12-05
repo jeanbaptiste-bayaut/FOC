@@ -4,16 +4,16 @@ import bcrypt from 'bcrypt';
 export default class UserDataMapper extends CoreDatamapper {
   static tableName = 'user';
 
-  static async getUserById(id) {
+  static async getUserByEmail(id) {
     const result = await this.client.query(
       `
             SELECT 
                 "user"."id" AS "user_id",
-                "user"."email" AS "user_email",
+                "user"."email" AS "user_email"
             FROM 
                 "user"
             WHERE 
-                "user"."id" = $1;
+                "user"."email" = $1;
             `,
       [id]
     );

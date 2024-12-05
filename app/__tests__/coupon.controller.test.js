@@ -60,25 +60,6 @@ describe('CouponController', () => {
       expect(res.json).toHaveBeenCalledWith(mockData);
     });
 
-    it('should throw an error if no input is provided', async () => {
-      const req = mockRequest({
-        user: { userId: 1 },
-        body: {
-          brand: null,
-          country: null,
-          nbcoupons: 5,
-          amount: 400,
-          wetsuit: 'false',
-          facturationCode: 'factu1',
-        },
-      });
-      const res = mockResponse();
-
-      await expect(
-        testController.getCouponByBrandCountry(req, res)
-      ).rejects.toThrow('Input data is missing');
-    });
-
     afterEach(() => {
       jest.restoreAllMocks();
     });

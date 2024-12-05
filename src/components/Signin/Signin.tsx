@@ -50,7 +50,7 @@ function Signin() {
 
     try {
       const checkIfEmailExists = await axios.post(
-        'http://localhost:3000/api/users/email',
+        `${import.meta.env.VITE_API_URL}/api/users/email`,
         {
           email: formDataSignin.email,
         },
@@ -63,7 +63,7 @@ function Signin() {
       }
       // Call signin endpoint
       await axios.post(
-        'http://localhost:3000/api/signin',
+        `${import.meta.env.VITE_API_URL}/api/signin`,
         {
           email: formDataSignin.email,
           password: formDataSignin.password,

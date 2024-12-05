@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 
 // Definition of the user type (you can adapt according to your needs)
 interface User {
@@ -25,6 +31,23 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem('user');
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.expiry > new Date().getTime()) {
+          setUser(parsedData.value);
+        } else {
+          localStorage.removeItem('user'); // Session expired
+        }
+      } catch (error) {
+        console.error('Failed to parse localStorage user data:', error);
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
 
   // function to set the user and save it in the local storage
   const login = (userData: User) => {

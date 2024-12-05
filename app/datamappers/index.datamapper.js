@@ -1,4 +1,4 @@
-import client from '../config/config.client.js';
+import { client } from '../config/config.client.js';
 import CouponDataMapper from './coupon.datamapper.js';
 import UserDataMapper from './user.datamapper.js';
 import UploadDatamapper from './upload.datamapper.js';

@@ -10,6 +10,15 @@ const client = new Pool({
       : process.env.PGURL,
 });
 
-await client.connect();
+// Fonction pour connecter le client
+async function connectClient() {
+  try {
+    await client.connect();
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Failed to connect to the database:', error);
+    throw error;
+  }
+}
 
-export default client;
+export { client, connectClient };

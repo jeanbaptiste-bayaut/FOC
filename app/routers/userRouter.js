@@ -192,15 +192,15 @@ router.route('/login').post(UserController.login.bind(UserController));
  *           type: string
  *         role:
  *           type: string
- *         facturation_code:
- *           type: string
+ *         facturationCodeList:
+ *           type: array
  *       example:
  *         id: 1
  *         email: "example@example.com"
  *         password: "admin"
  *         service: "admin"
  *         role: "admin"
- *         facturation_code: "factucode"
+ *         facturationCodeList: [{facturation_code: "factucode"}]
  * /signin:
  *   post:
  *     summary: Create a user
@@ -217,7 +217,7 @@ router.route('/login').post(UserController.login.bind(UserController));
  *               email: "email@email.com"
  *               password: "password"
  *               service: "admin"
- *               facturation_code: "factucode"
+ *               facturationCodeList: [{facturation_code: "factucode"}]
  *               role: "admin"
  *     responses:
  *       201:

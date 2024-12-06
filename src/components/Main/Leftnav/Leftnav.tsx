@@ -1,5 +1,5 @@
 import './Leftnav.scss';
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../../hooks/AuthContext';
 
 function Leftnav() {
   const { logout } = useAuth();
@@ -19,9 +19,14 @@ function Leftnav() {
       <div className="section-nav-top">
         <ul className="nav-main">
           {user?.role === 'admin' && (
-            <li>
-              <a href="/signin">Signin</a>
-            </li>
+            <>
+              <li>
+                <a href="/signin">Signin</a>
+              </li>
+              <li>
+                <a href="/admin">Admin</a>
+              </li>
+            </>
           )}
           <li>
             <a href="/coupons">Coupons</a>

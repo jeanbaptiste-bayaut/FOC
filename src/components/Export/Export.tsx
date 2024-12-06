@@ -35,7 +35,7 @@ function Export() {
     const endDate = format(timeRange[0].endDate, 'yyyy-MM-dd');
 
     const result = await axios.post(
-      `${import.meta / enf.VITE_API_URL}/api/export`,
+      `${import.meta.env.VITE_API_URL}/api/export`,
       {
         startDate,
         endDate,

@@ -21,6 +21,50 @@ export default class UserController extends CoreController {
     }
   }
 
+  static async getUsersWithFacturationCode(req, res) {
+    try {
+      const users = await UserDataMapper.getUsersWithFacturationCode();
+      const transformedUsers = users.reduce((acc, user) => {
+        const existingUser = acc.find((u) => u.id === user.user_id);
+        if (existingUser) {
+          existingUser.facturationCodes.push(user.facturation_code);
+        } else {
+          acc.push({
+            id: user.user_id,
+            email: user.user_email,
+            facturationCodes: [user.facturation_code],
+            role: user.role,
+            service: user.service,
+          });
+        }
+        return acc;
+      }, []);
+
+      return res.json(transformedUsers);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
+  static async updateUserWithFactuCode(req, res) {
+    const { user, prevFacturationCodes } = req.body;
+
+    try {
+      const updatedUser = await UserDataMapper.updateUser(
+        user,
+        prevFacturationCodes
+      );
+
+      if (!updatedUser) {
+        throw new Error('User not found or fcaturation code not found');
+      }
+
+      return res.json(updatedUser);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
   static async login(req, res) {
     const { email, password } = req.body;
     try {

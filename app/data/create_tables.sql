@@ -27,7 +27,7 @@ CREATE TABLE "user" (
 
 CREATE TABLE "facturation_code" (
     "id" SERIAL PRIMARY KEY,
-    "code" TEXT NOT NULL,
+    "code" TEXT NOT NULL UNIQUE,
 )
 
 CREATE TABLE "user_has_facturation_code" (

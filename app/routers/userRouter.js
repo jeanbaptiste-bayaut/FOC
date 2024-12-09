@@ -77,7 +77,10 @@ router
 
 router
   .route('/users/email')
-  .post(UserController.getUserByEmail.bind(UserController));
+  .post(
+    authMiddleware.verifyToken,
+    UserController.getUserByEmail.bind(UserController)
+  );
 
 /**
  * @swagger
@@ -131,7 +134,21 @@ router
 router
   .route('/users/:id')
   .get(UserController.getOne.bind(UserController))
-  .patch(UserController.updateUserWithFactuCode.bind(UserController));
+  .patch(
+    authMiddleware.verifyToken,
+    UserController.updateUserWithFactuCode.bind(UserController)
+  )
+  .delete(
+    authMiddleware.verifyToken,
+    UserController.delete.bind(UserController)
+  );
+
+router
+  .route('/users/:id/change-pwd')
+  .patch(
+    authMiddleware.verifyToken,
+    UserController.updatePassword.bind(UserController)
+  );
 
 /**
  * @swagger

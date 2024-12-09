@@ -2,7 +2,8 @@ import CoreDatamapper from './core.datamapper.js';
 import bcrypt from 'bcrypt';
 
 export default class UserDataMapper extends CoreDatamapper {
-  static tableName = 'user';
+  static tableName = '"user"';
+  static entityName = 'user';
 
   static async getUserByEmail(id) {
     const result = await this.client.query(
@@ -31,7 +32,8 @@ export default class UserDataMapper extends CoreDatamapper {
       "user"."service" AS "service"
       FROM "user"
       JOIN "user_has_facturation_code" ON "user_has_facturation_code"."user_id" = "user"."id"
-      JOIN "facturation_code" ON "facturation_code"."id" = "user_has_facturation_code"."facturation_code_id";`
+      JOIN "facturation_code" ON "facturation_code"."id" = "user_has_facturation_code"."facturation_code_id"
+      ORDER BY "user"."id" ASC;`
     );
 
     return result.rows;
@@ -141,9 +143,6 @@ export default class UserDataMapper extends CoreDatamapper {
         ? user.facturationCodes
         : [user.facturationCodes];
 
-      console.log('prev', prevFacturationCodes);
-      console.log('current', currentFacturationCodes);
-
       const prevFactuCodeIds = [];
       const newFactuCodeIds = [];
 
@@ -203,6 +202,30 @@ export default class UserDataMapper extends CoreDatamapper {
     } catch (error) {
       console.error(`Error updating user: ${error.message}`);
       throw new Error(`Error updating user: ${error.message}`);
+    }
+  }
+
+  static async updatePassword(id, newPassword) {
+    try {
+      const saltRound = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRound);
+
+      const result = await this.client.query(
+        `UPDATE "user" 
+         SET "password" = $1
+         WHERE "id" = $2 
+         RETURNING "id"`,
+        [hashedPassword, id]
+      );
+
+      if (!result.rows.length) {
+        throw new Error(`User with ID ${id} not found`);
+      }
+
+      return { success: `Password for user ${id} updated successfully` };
+    } catch (error) {
+      console.error(`Error updating user password: ${error.message}`);
+      throw new Error(`Error updating user password: ${error.message}`);
     }
   }
 }

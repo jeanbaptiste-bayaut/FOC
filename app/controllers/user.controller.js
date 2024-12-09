@@ -126,4 +126,21 @@ export default class UserController extends CoreController {
       return res.status(500).json({ message: error.message });
     }
   }
+
+  static async updatePassword(req, res) {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    try {
+      const result = await UserDataMapper.updatePassword(id, password);
+
+      if (!result) {
+        throw new Error('User not found');
+      }
+
+      return res.json(result);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
 }

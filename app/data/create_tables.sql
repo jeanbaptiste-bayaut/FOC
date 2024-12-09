@@ -35,7 +35,7 @@ CREATE TABLE "user_has_facturation_code" (
     "user_id" INT NOT NULL,
     "facturation_code_id" INT NOT NULL,
     FOREIGN KEY ("user_id") REFERENCES "user"("id"),
-    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id")
+    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id");
 );
 
 -- Table COUPON

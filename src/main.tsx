@@ -26,6 +26,7 @@ const root = ReactDOM.createRoot(
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
+      <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/signin"

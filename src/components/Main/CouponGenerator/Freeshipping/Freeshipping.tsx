@@ -183,19 +183,22 @@ function Freeshipping() {
             ))}
           </tbody>
         </table>
-        <CopyToClipboard
-          text={state.value}
-          onCopy={() => {
-            setState({
-              value: state.value,
-              copied: true,
-            });
-          }}
-        >
-          <button>Copy coupons to clipboard</button>
-        </CopyToClipboard>
+        <div className="copy-coupons">
+          <textarea value={state.value} readOnly style={{ display: 'none' }} />
+          <CopyToClipboard
+            text={state.value}
+            onCopy={() => setState({ ...state, copied: true })}
+          >
+            <button>Copy Coupons</button>
+          </CopyToClipboard>
+          {state.copied && (
+            <>
+              <br />
+              <span>Copied!</span>
+            </>
+          )}
+        </div>
       </div>
-      <span>{state.copied ? 'Copied!' : ''}</span>
     </div>
   );
 }

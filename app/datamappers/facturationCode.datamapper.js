@@ -39,4 +39,46 @@ export default class FacturationCodeDatamapper extends CoreDataMapper {
       throw new Error(error);
     }
   }
+
+  static async addExisitingFacturationCodeToUser(userId, facturationCodeId) {
+    try {
+      await this.client.query(
+        `INSERT INTO "user_has_facturation_code" ("facturation_code_id", "user_id") 
+      VALUES ($1,$2)  
+      RETURNING *`,
+        [facturationCodeId, userId]
+      );
+
+      return { message: `Facturation code ${facturationCodeId} added` };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async addNewFacturationCodeToUser(userId, code) {
+    try {
+      const response = await this.client.query(
+        `INSERT INTO "facturation_code" ("code") VALUES ($1)
+        RETURNING "id"`,
+        [code]
+      );
+
+      if (!response) {
+        throw new Error('Facturation code not added');
+      }
+
+      const newCodeId = response.rows[0].id;
+
+      await this.client.query(
+        `INSERT INTO "user_has_facturation_code" ("facturation_code_id", "user_id") 
+      VALUES ($1,$2)  
+      RETURNING *`,
+        [newCodeId, userId]
+      );
+
+      return { message: `Facturation code ${code} added` };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

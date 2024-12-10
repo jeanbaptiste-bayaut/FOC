@@ -146,15 +146,29 @@ export default class UserDataMapper extends CoreDatamapper {
       const prevFactuCodeIds = [];
       const newFactuCodeIds = [];
 
+      // Check if facturation codes have changed
+      let status = false;
+      currentFacturationCodes.forEach((code, index) => {
+        if (code !== prevFacturationCodes[index]) {
+          status = true;
+        }
+      });
+
+      if (status === false) {
+        console.log('No changes in facturation codes');
+        return { success: `User ${user.id} updated successfully` };
+      }
+
       // Fetch previous and new facturation code IDs in parallel
-      const [prevResults, newResults] = await Promise.all([
+      await Promise.all([
         Promise.all(
           prevFacturationCodes.map(async (code) => {
             const result = await this.client.query(
               `SELECT "id" FROM "facturation_code" WHERE "code" = $1`,
               [code]
             );
-            return result.rows.map((row) => row.id);
+
+            return prevFactuCodeIds.push(result.rows[0].id);
           })
         ),
         Promise.all(
@@ -163,14 +177,10 @@ export default class UserDataMapper extends CoreDatamapper {
               `SELECT "id" FROM "facturation_code" WHERE "code" = $1`,
               [code]
             );
-            return result.rows.map((row) => row.id);
+            return newFactuCodeIds.push(result.rows[0].id);
           })
         ),
       ]);
-
-      // Flatten and combine the results
-      prevFactuCodeIds.push(...prevResults.flat());
-      newFactuCodeIds.push(...newResults.flat());
 
       // Validate matching IDs for update
       if (prevFactuCodeIds.length !== newFactuCodeIds.length) {
@@ -181,6 +191,7 @@ export default class UserDataMapper extends CoreDatamapper {
       await Promise.all(
         prevFactuCodeIds.map(async (prevId, index) => {
           const newId = newFactuCodeIds[index];
+
           const result = await this.client.query(
             `UPDATE "user_has_facturation_code"
              SET "facturation_code_id" = $1
@@ -190,7 +201,7 @@ export default class UserDataMapper extends CoreDatamapper {
             [newId, user.id, prevId]
           );
 
-          if (!result.rows.length) {
+          if (!result.rows) {
             throw new Error(
               `Failed to update facturation code for user ${user.id}`
             );

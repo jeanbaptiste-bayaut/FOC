@@ -1,6 +1,6 @@
 import './App.scss';
-import Coupons from './components/CouponGenerator/Coupons/Coupons.tsx';
-import Freeshipping from './components/CouponGenerator/Freeshipping/Freeshipping.tsx';
+import Coupons from './components/Main/CouponGenerator/Coupons/Coupons.tsx';
+import Freeshipping from './components/Main/CouponGenerator/Freeshipping/Freeshipping.tsx';
 import useAxiosInterceptors from './service/axiosInterceptor';
 
 function App() {

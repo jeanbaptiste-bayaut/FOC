@@ -59,5 +59,14 @@ table {
             margin-bottom: 0.5em;
         }
     }
+
+    td:last-child {
+        display: flex;
+        flex-direction: column;
+        button {
+        margin-inline: 0.1rem;
+        font-size: 0.7rem;
+    }
+}
 }
 }

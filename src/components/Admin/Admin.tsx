@@ -21,6 +21,28 @@ const AdminPage = () => {
     setEditUser(user);
   };
 
+  const handleAddFactu = async (id: number) => {
+    const facturationCode = prompt('Enter facturation code');
+
+    try {
+      const updateUserHasFacturation = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/facturation-codes/${id}`,
+        {
+          facturationCode: facturationCode,
+        },
+        { withCredentials: true }
+      );
+
+      if (!updateUserHasFacturation) {
+        throw new Error('Error updating user facturation codes');
+      }
+
+      getUsers();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleDelete = async (id: number) => {
     try {
       const facturationCodes = users.find(
@@ -47,6 +69,7 @@ const AdminPage = () => {
       );
 
       if (result) {
+        console.log(`User ${id} deleted`);
         getUsers();
       }
     } catch (error) {
@@ -86,12 +109,10 @@ const AdminPage = () => {
 
     const changePwd = await axios.patch(
       `${import.meta.env.VITE_API_URL}/api/users/${id}/change-pwd`,
-      [
-        { withCredentials: true },
-        {
-          password: pwd,
-        },
-      ]
+      {
+        password: pwd,
+      },
+      { withCredentials: true }
     );
 
     if (changePwd) {
@@ -110,13 +131,14 @@ const AdminPage = () => {
     const user = users.find((user: User) => user.id === id);
     setIsLoading(true);
 
-    await axios.patch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, [
-      { withCredentials: true },
+    await axios.patch(
+      `${import.meta.env.VITE_API_URL}/api/users/${id}`,
       {
         user: editUser,
         prevFacturationCodes: user?.facturationCodes,
       },
-    ]);
+      { withCredentials: true }
+    );
     setEditUser(undefined);
     setIsLoading(false);
     getUsers();
@@ -208,10 +230,13 @@ const AdminPage = () => {
               </td>
               <td>
                 <button onClick={() => handleEdit(user.id)}>Edit</button>
-                <button onClick={() => handleDelete(user.id)}>Delete</button>
+                <button onClick={() => handleAddFactu(user.id)}>
+                  Add Factu Code
+                </button>
                 <button onClick={() => handleChangePwd(user.id)}>
                   Change Pwd
                 </button>
+                <button onClick={() => handleDelete(user.id)}>Delete</button>
                 {pwdChange && user.id == pwdChange.id ? (
                   <div className="pwd-message">Password changed</div>
                 ) : null}

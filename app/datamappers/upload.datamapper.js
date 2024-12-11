@@ -21,7 +21,7 @@ export default class UploadDatamapper extends CoreDataMapper {
             try {
               // Prepare the query
               const query = `
-                INSERT INTO "coupon" ("code", "amount", "status", "country_id", "wetsuit")
+                INSERT INTO "coupon" ("code", "amount", "country_id", "wetsuit")
                 VALUES ($1, $2, $3, $4, $5)
                 ON CONFLICT (code, country_id) DO NOTHING
                 RETURNING "id";
@@ -33,7 +33,6 @@ export default class UploadDatamapper extends CoreDataMapper {
                   const result = await this.client.query(query, [
                     row.code,
                     row.amount,
-                    row.status,
                     row.country_id,
                     row.wetsuit,
                   ]);
@@ -78,8 +77,8 @@ export default class UploadDatamapper extends CoreDataMapper {
             try {
               // Prepare the query
               const query = `
-                INSERT INTO "freeshipping" ("code", "status", "country_id")
-                VALUES ($1, $2, $3)
+                INSERT INTO "freeshipping" ("code", "country_id")
+                VALUES ($1, $2)
                 ON CONFLICT (code, country_id) DO NOTHING
                 RETURNING "id";
               `;
@@ -89,7 +88,6 @@ export default class UploadDatamapper extends CoreDataMapper {
                 results.map(async (row) => {
                   const result = await this.client.query(query, [
                     row.code,
-                    row.status,
                     row.country_id,
                   ]);
 

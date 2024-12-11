@@ -43,7 +43,7 @@ CREATE TABLE "coupon" (
     "id" SERIAL PRIMARY KEY,
     "code" VARCHAR(50) NOT NULL,
     "amount" NUMERIC(10, 2) NOT NULL,
-    "status" INT NOT NULL,
+    "status" INT NOT NULL DEFAULT 0,
     "country_id" INT NOT NULL,
     "wetsuit" TEXT default 'false',
     "user_id" INT,
@@ -59,7 +59,7 @@ CREATE TABLE "coupon" (
 CREATE TABLE "freeshipping" (
     "id" SERIAL PRIMARY KEY,
     "code" VARCHAR(50) NOT NULL,
-    "status" INT NOT NULL,
+    "status" INT NOT NULL DEFAULT 0,
     "country_id" INT NOT NULL,
     "user_id" INT,
     FOREIGN KEY ("country_id") REFERENCES "country"("id"),

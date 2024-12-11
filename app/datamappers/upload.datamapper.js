@@ -19,17 +19,44 @@ export default class UploadDatamapper extends CoreDataMapper {
           })
           .on('end', async () => {
             try {
+              const getCountryIdQuery = `
+              SELECT "country"."id" as "country_id" from "country"
+              JOIN "brand" on "country"."brand_id" = "brand"."id"
+              WHERE "brand"."name" = $1
+              AND "country"."name" = $2;`;
+
               // Prepare the query
               const query = `
                 INSERT INTO "coupon" ("code", "amount", "country_id", "wetsuit")
-                VALUES ($1, $2, $3, $4, $5)
+                VALUES ($1, $2, $3, $4)
                 ON CONFLICT (code, country_id) DO NOTHING
                 RETURNING "id";
               `;
 
+              const newTable = [];
               // Execute the queries for all rows
               await Promise.all(
                 results.map(async (row) => {
+                  const countryIdResult = await this.client.query(
+                    getCountryIdQuery,
+                    [row.brand, row.country]
+                  );
+
+                  if (countryIdResult.rows.length === 0) {
+                    throw new Error('Country not found');
+                  }
+
+                  newTable.push({
+                    code: row.code,
+                    amount: row.amount,
+                    wetsuit: row.wetsuit,
+                    country_id: countryIdResult.rows[0].country_id,
+                  });
+                })
+              );
+
+              await Promise.all(
+                newTable.map(async (row) => {
                   const result = await this.client.query(query, [
                     row.code,
                     row.amount,
@@ -75,6 +102,12 @@ export default class UploadDatamapper extends CoreDataMapper {
           })
           .on('end', async () => {
             try {
+              const getCountryIdQuery = `
+              SELECT "country"."id" as "country_id" from "country"
+              JOIN "brand" on "country"."brand_id" = "brand"."id"
+              WHERE "brand"."name" = $1
+              AND "country"."name" = $2;`;
+
               // Prepare the query
               const query = `
                 INSERT INTO "freeshipping" ("code", "country_id")
@@ -84,8 +117,27 @@ export default class UploadDatamapper extends CoreDataMapper {
               `;
 
               // Execute the queries for all rows
+              const newTable = [];
               await Promise.all(
                 results.map(async (row) => {
+                  const countryIdResult = await this.client.query(
+                    getCountryIdQuery,
+                    [row.brand, row.country]
+                  );
+
+                  if (countryIdResult.rows.length === 0) {
+                    throw new Error('Country not found');
+                  }
+
+                  newTable.push({
+                    code: row.code,
+                    country_id: countryIdResult.rows[0].country_id,
+                  });
+                })
+              );
+
+              await Promise.all(
+                newTable.map(async (row) => {
                   const result = await this.client.query(query, [
                     row.code,
                     row.country_id,

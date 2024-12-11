@@ -11,6 +11,8 @@ function DropFile() {
   // handle the file change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
+    console.log(selectedFile);
+
     if (selectedFile) {
       setFile(selectedFile);
     }
@@ -62,17 +64,76 @@ function DropFile() {
   return (
     <div>
       <h1>Upload CSV File</h1>
-      <form id="uploadForm" encType="multipart/form-data" onSubmit={handleCsv}>
-        <input
-          type="file"
-          id="csvFile"
-          name="csvFile"
-          accept=".csv"
-          required
-          onChange={handleFileChange}
-        />
-        <button type="submit">Upload</button>
-      </form>
+      <div className="dropzone">
+        <form
+          id="uploadForm"
+          encType="multipart/form-data"
+          onSubmit={handleCsv}
+        >
+          <input
+            type="file"
+            id="csvFile"
+            name="csvFile"
+            accept=".csv"
+            required
+            onChange={handleFileChange}
+          />
+          <button type="submit">Upload FOC coupon</button>
+          <small>format file : exemple-foc.csv</small>
+          <table>
+            <thead>
+              <tr>
+                <th>code</th>
+                <th>amount</th>
+                <th>status</th>
+                <th>country_id</th>
+                <th>wetsuit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ivip-...</td>
+                <td>1000</td>
+                <td>0</td>
+                <td>1</td>
+                <td>false</td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+        <form
+          id="uploadForm"
+          encType="multipart/form-data"
+          onSubmit={handleCsv}
+        >
+          <input
+            type="file"
+            id="freeshipping"
+            name="freeshipping"
+            accept=".csv"
+            required
+            onChange={handleFileChange}
+          />
+          <button type="submit">Upload Freeshipping</button>
+          <small>format file : exemple-freeshipping.csv</small>
+          <table>
+            <thead>
+              <tr>
+                <th>code</th>
+                <th>status</th>
+                <th>country_id</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>freeshipping-...</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
     </div>
   );
 }

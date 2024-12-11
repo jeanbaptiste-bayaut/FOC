@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2em;
+  gap: 1em;
 
   input {
     font-size: 1.2rem;
@@ -12,5 +12,33 @@
 
   button {
     font-size: 1.2rem;
+  }
+}
+
+.dropzone {
+  display: flex;
+  flex-wrap: wrap;
+
+  form {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-inline: 1em;
+    padding: 1em;
+    width: 400px
+  }
+
+  table {
+    border-collapse: collapse;
+    transform: scale(0.7);
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+    }
+
+    td {
+      text-align: center;
+    }
   }
 }

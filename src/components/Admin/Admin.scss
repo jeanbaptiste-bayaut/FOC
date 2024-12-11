@@ -40,19 +40,22 @@ form {
 table {
     width: 80%;
     border: 1px solid #e9ecef;
-    padding: 1em;
     border-collapse: collapse;
     font-size: 0.8rem;
     margin: 0 100px;
 
+    th:last-child {
+        width: 150px;
+    }
+
     th {
         border: 1px solid #e9ecef;
-        padding: 0.9em;
+        padding-block: 0.9em;
     }
 
     td {
         border: 1px solid #e9ecef;
-        padding: 0.9em;
+        padding-block: 0.3em;
 
         span {
             display: block;
@@ -61,12 +64,37 @@ table {
     }
 
     td:last-child {
-        display: flex;
-        flex-direction: column;
+
         button {
-        margin-inline: 0.1rem;
+        margin-block: 0.1rem;
         font-size: 0.7rem;
+        width: 125px;
     }
+
+    .pwd-message {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .visible {
+        opacity: 1;
+        transform: translateY(0);
+        transition: ease 0.5s;
+    }
+
+    .new-pwd-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+        .validate-pwd-button {
+        padding: 0;
+        margin: 0;
+        background: none;
+        width: 20px;
+    }
+}
 }
 }
 }

@@ -15,6 +15,7 @@ const AdminPage = () => {
   const [editUser, setEditUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(false);
   const [pwdChange, setPwdChange] = useState({ id: 0, status: false });
+  const [pwd, setPwd] = useState('');
 
   const handleEdit = (id: number) => {
     const user = users.find((user: User) => user.id === id);
@@ -104,11 +105,11 @@ const AdminPage = () => {
     });
   };
 
-  const handleChangePwd = async (id: number) => {
-    const pwd = prompt('Enter new password');
+  const handleSubmitNewPwd = async (e: React.FormEvent, userId: number) => {
+    e.preventDefault();
 
     const changePwd = await axios.patch(
-      `${import.meta.env.VITE_API_URL}/api/users/${id}/change-pwd`,
+      `${import.meta.env.VITE_API_URL}/api/users/${userId}/change-pwd`,
       {
         password: pwd,
       },
@@ -116,12 +117,16 @@ const AdminPage = () => {
     );
 
     if (changePwd) {
-      setPwdChange({ id: id, status: true });
+      setPwdChange({ id: userId, status: true });
     }
 
     setTimeout(() => {
       setPwdChange({ id: 0, status: false });
     }, 3000);
+  };
+
+  const handleChangePwd = async (id: number) => {
+    setPwdChange({ id: id, status: false });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -236,10 +241,33 @@ const AdminPage = () => {
                 <button onClick={() => handleChangePwd(user.id)}>
                   Change Pwd
                 </button>
-                <button onClick={() => handleDelete(user.id)}>Delete</button>
-                {pwdChange && user.id == pwdChange.id ? (
-                  <div className="pwd-message">Password changed</div>
+                {user.id == pwdChange.id ? (
+                  <form
+                    className={`new-pwd-form${
+                      pwdChange.status == false ? ' visible' : ''
+                    }`}
+                    onSubmit={(e) => handleSubmitNewPwd(e, user.id)}
+                  >
+                    <input
+                      type="text"
+                      name="password"
+                      placeholder="Enter new password"
+                      value={pwd}
+                      onChange={(e) => setPwd(e.target.value)}
+                    />
+                    <button className="validate-pwd-button">✅</button>
+                  </form>
                 ) : null}
+                {user.id == pwdChange.id ? (
+                  <div
+                    className={`pwd-message${
+                      pwdChange.status == true ? ' visible' : ''
+                    }`}
+                  >
+                    Password changed
+                  </div>
+                ) : null}
+                <button onClick={() => handleDelete(user.id)}>Delete</button>
               </td>
             </tr>
           ))}

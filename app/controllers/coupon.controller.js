@@ -3,6 +3,16 @@ import { CouponDataMapper } from '../datamappers/index.datamapper.js';
 export default class CouponController {
   static mainDatamapper = CouponDataMapper;
 
+  static async getCouponInformations(req, res) {
+    try {
+      const list = await CouponDataMapper.getCouponInformations();
+
+      return res.json(list);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
   static async getCouponByBrandCountry(req, res) {
     const { brand, country, amount, nbcoupons, wetsuit, facturationCode } =
       req.body;

@@ -133,6 +133,10 @@ const router = express.Router();
 
 router
   .route('/coupon')
+  .get(
+    authMiddleware.verifyToken,
+    CouponController.getCouponInformations.bind(CouponController)
+  )
   .post(
     authMiddleware.verifyToken,
     CouponController.getCouponByBrandCountry.bind(CouponController)

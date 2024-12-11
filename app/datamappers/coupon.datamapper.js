@@ -3,6 +3,36 @@ import CoreDataMapper from './core.datamapper.js';
 export default class CouponDataMapper extends CoreDataMapper {
   static tableName = 'coupon';
 
+  static async getCouponInformations() {
+    try {
+      const result = await this.client.query(
+        `
+      SELECT 
+          "country"."name" AS "country_name",
+          "brand"."name" AS "brand_name", 
+          "coupon"."amount" AS "coupon_amount", 
+          "coupon"."status" AS "coupon_status",
+          "coupon"."wetsuit" AS "coupon_wetsuit",
+          "country"."currency" AS "country_currency",
+          COUNT("coupon"."code") AS "nb_coupon"
+      FROM 
+          "coupon"
+      JOIN 
+          "country" ON "coupon"."country_id" = "country"."id"
+      JOIN 
+          "brand" ON "country"."brand_id" = "brand"."id"
+      WHERE 
+          "coupon"."status" = 0
+          GROUP BY "country_name", "brand"."name", "coupon"."amount", "coupon"."status", "coupon"."wetsuit", "country"."currency";
+      `
+      );
+
+      return result.rows;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   // get coupons by brand, country, amount, wetsuit, facturationCode
   static async getCouponByBrandCountry(
     brand,

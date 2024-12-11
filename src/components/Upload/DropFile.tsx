@@ -1,7 +1,7 @@
 import './DropFile.scss';
 import axios from 'axios';
 import React, { useState } from 'react';
-import useAxiosInterceptors from '../../../service/axiosInterceptor';
+import useAxiosInterceptors from '../../service/axiosInterceptor';
 
 function DropFile() {
   // intercept the response from the server if no token is provided or if the token is expired redirect to login

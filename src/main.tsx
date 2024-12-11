@@ -13,7 +13,7 @@ import App from './App.tsx';
 import Login from './components/Auth/Login/Login.tsx';
 import Signin from './components/Auth/Signin/Signin.tsx';
 import './index.scss';
-import DropFile from './components/Upload/DropFile/DropFile.tsx';
+import DropFile from './components/Upload/DropFile.tsx';
 import Report from './components/Report/Report.tsx';
 import Export from './components/Export/Export.tsx';
 import { AuthProvider } from './hooks/AuthContext.tsx';

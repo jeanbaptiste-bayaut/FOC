@@ -85,7 +85,6 @@ function DropFile() {
               <tr>
                 <th>code</th>
                 <th>amount</th>
-                <th>status</th>
                 <th>country_id</th>
                 <th>wetsuit</th>
               </tr>
@@ -94,7 +93,6 @@ function DropFile() {
               <tr>
                 <td>ivip-...</td>
                 <td>1000</td>
-                <td>0</td>
                 <td>1</td>
                 <td>false</td>
               </tr>
@@ -120,14 +118,12 @@ function DropFile() {
             <thead>
               <tr>
                 <th>code</th>
-                <th>status</th>
                 <th>country_id</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>freeshipping-...</td>
-                <td>1</td>
                 <td>1</td>
               </tr>
             </tbody>

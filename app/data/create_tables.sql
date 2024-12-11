@@ -69,4 +69,7 @@ CREATE TABLE "freeshipping" (
 ALTER TABLE "coupon"
 ADD CONSTRAINT "unique_code_country" UNIQUE ("code", "country_id");
 
+ALTER TABLE "freeshipping"
+ADD CONSTRAINT "unique_freeshipping_country" UNIQUE ("code", "country_id");
+
 COMMIT;

@@ -11,6 +11,12 @@ export default class UploadController {
 
       const filePath = req.file.path;
 
+      if (req.file.originalname.includes('freeshipping')) {
+        const result = await UploadDatamapper.uploadFreeshipping(filePath);
+
+        return res.status(200).json(result);
+      }
+
       const result = await UploadDatamapper.uploadCoupons(filePath);
 
       res.status(200).json(result);

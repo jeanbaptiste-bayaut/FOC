@@ -130,5 +130,5 @@ dist
 .pnp.*
 
 test.http
-
 TODO.md
+.DS_Store

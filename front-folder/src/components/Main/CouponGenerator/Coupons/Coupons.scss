@@ -1,0 +1,44 @@
+.coupons-container {
+  margin-bottom: 4em;
+
+  .form-coupons {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 2em;
+
+    select {
+      padding: 8px 12px;
+      margin-block: 1em;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-block: 1em;
+    }
+  }
+
+  #coupons {
+    table {
+      width: 100%;
+      border: 1px solid white;
+
+      th {
+        padding: 8px 12px;
+        border-bottom: 1px solid white;
+      }
+
+      td {
+        padding: 8px 12px;
+      }
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-block: 1em;
+    }
+  }
+
+  .inactive {
+    display: none;
+  }
+}

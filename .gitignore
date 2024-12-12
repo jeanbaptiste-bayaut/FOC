@@ -127,8 +127,12 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
+<<<<<<< HEAD
 .pnp.*=
 
 .env
-.DS_Store
+.pnp.*
+
+test.http
 TODO.md
+.DS_Store

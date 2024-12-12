@@ -1,0 +1,9 @@
+BRAND: brand_id, name
+POSSEDER, 1N BRAND, 1N COUNTRY
+COUNTRY: country_id, name, code, currency
+AVOIR, 1N COUNTRY, 1N COUPON
+COUPON: coupon_id, code, amount, status
+ 
+DISPOSER, 1N COUNTRY, 1N FREESHIPPING
+ 
+FREESHIPPING: freeshipping_id, code, status

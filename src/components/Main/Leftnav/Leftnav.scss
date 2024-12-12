@@ -23,8 +23,8 @@ nav {
     margin-top: 0.5em;
   }
 
-  ul {
-    margin-top: 1em;
+  .section-nav-top {
+    height: 100%;
 
     li {
       text-align: left;
@@ -32,6 +32,27 @@ nav {
       a {
         font-size: 1.5rem;
         text-align: left;
+      }
+    }
+
+    .nav-connection {
+      position: absolute;
+      bottom: 0;
+
+      ul {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        li a {
+          color: rgb(121, 119, 119);
+        }
+
+        li a:hover {
+          color: rgb(246, 243, 243);
+          transition: ease-in-out 0.3s;
+        }
       }
     }
   }

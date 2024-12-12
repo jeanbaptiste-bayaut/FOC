@@ -4,7 +4,12 @@ import { useAuth } from '../hooks/AuthContext';
 
 interface RoleRouteProps {
   children: JSX.Element;
-  allowedRoles: Array<'admin' | 'editor' | 'user'>; // Adapter aux rôles définis
+  allowedRoles: Array<'admin' | 'editor' | 'user'>;
+}
+
+interface LocalStorageProps {
+  value: { userId: number; email: string; role: 'admin' | 'user' | 'editor' };
+  expiry: number;
 }
 
 interface UserFromLocalStorage {
@@ -15,26 +20,41 @@ interface UserFromLocalStorage {
 
 const RoleRoute: React.FC<RoleRouteProps> = ({ children, allowedRoles }) => {
   const { user } = useAuth();
-  const getUserFromLocalStorage = localStorage.getItem('user');
 
+  const localStorageData = localStorage.getItem('user');
   let userFromLocalStorage: UserFromLocalStorage | null = null;
 
-  if (getUserFromLocalStorage) {
-    userFromLocalStorage = JSON.parse(getUserFromLocalStorage);
+  if (localStorageData) {
+    try {
+      const parsedData: LocalStorageProps = JSON.parse(localStorageData);
+      if (parsedData.expiry > new Date().getTime()) {
+        userFromLocalStorage = parsedData.value;
+      } else {
+        console.warn('Session expired');
+        localStorage.removeItem('user');
+      }
+    } catch (error) {
+      console.error('Error reading localStorage:', error);
+      localStorage.removeItem('user');
+    }
   }
 
-  if (!user && !userFromLocalStorage) {
-    // Redirigez si l'utilisateur n'est pas authentifié
-    return <Navigate to="/login" />;
+  const authenticatedUser = user || userFromLocalStorage;
+
+  if (!authenticatedUser) {
+    // If there is no authenticated user redirect to login
+    return <Navigate to="/login" replace />;
   }
 
-  if (
-    userFromLocalStorage &&
-    !allowedRoles.includes(userFromLocalStorage.role)
-  ) {
-    // Redirigez si le rôle ne correspond pas
-    alert('You are not allowed to access this page');
-    return <Navigate to="/coupons" />;
+  if (!allowedRoles.includes(authenticatedUser.role)) {
+    // If user is not allowed to access the page, show an alert and redirect to coupons
+    return (
+      <Navigate
+        to="/coupons"
+        replace
+        state={{ alert: 'Unauthorized access' }}
+      />
+    );
   }
 
   return children;

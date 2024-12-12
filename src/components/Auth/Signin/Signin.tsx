@@ -2,40 +2,41 @@ import './Signin.scss';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useAxiosInterceptors from '../../service/axiosInterceptor';
+import useAxiosInterceptors from '../../../service/axiosInterceptor';
 
 function Signin() {
   useAxiosInterceptors();
   const navigate = useNavigate();
 
-  // État initial du formulaire
+  const [emailExists, setEmailExists] = useState(false);
+
   const [formDataSignin, setFormDataSignin] = useState({
     email: '',
     password: '',
     service: '',
-    facturation: [{ facturation_code: '' }], // Tableau des codes de facturation
+    facturation: [{ facturation_code: '' }],
     role: '',
   });
 
-  // Gère les changements dans les inputs
-  const handleChangeSigninin = (
+  // Handles changes in the inputs
+  const handleChangeSignin = (
     e: React.ChangeEvent<HTMLInputElement>,
     index?: number
   ) => {
     const { name, value } = e.target;
 
     if (name === 'facturation_code' && typeof index === 'number') {
-      // Mise à jour d'un code de facturation spécifique
+      // Update a specific facturation code as it can be one ore more
       const updatedFacturation = [...formDataSignin.facturation];
       updatedFacturation[index].facturation_code = value;
       setFormDataSignin({ ...formDataSignin, facturation: updatedFacturation });
     } else {
-      // Mise à jour des autres champs du formulaire
+      // Update the other fields
       setFormDataSignin({ ...formDataSignin, [name]: value });
     }
   };
 
-  // Fonction pour ajouter un nouveau champ de facturation
+  // Function to add a new facturation code input
   const addNewFacturationCodeInput = () => {
     setFormDataSignin((prevState) => ({
       ...prevState,
@@ -43,16 +44,26 @@ function Signin() {
     }));
   };
 
-  // Envoi du formulaire
+  // Submition of the form
   const handleSubmitSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('formDataSignin', formDataSignin);
-
     try {
-      // Envoi des données avec axios
+      const checkIfEmailExists = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/email`,
+        {
+          email: formDataSignin.email,
+        },
+        { withCredentials: true }
+      );
+
+      if (checkIfEmailExists.data) {
+        setEmailExists(true);
+        return;
+      }
+      // Call signin endpoint
       await axios.post(
-        'http://localhost:3000/api/signin',
+        `${import.meta.env.VITE_API_URL}/api/signin`,
         {
           email: formDataSignin.email,
           password: formDataSignin.password,
@@ -62,6 +73,8 @@ function Signin() {
         },
         { withCredentials: true }
       );
+
+      // redirect to login
       navigate('/login');
     } catch (error) {
       console.error(error);
@@ -78,16 +91,17 @@ function Signin() {
         id="signin-email"
         name="email"
         value={formDataSignin.email}
-        onChange={handleChangeSigninin}
+        onChange={handleChangeSignin}
         required
         placeholder="email"
       />
+      {emailExists && <p>Email already exists</p>}
       <input
         type="password"
         id="signin-password"
         name="password"
         value={formDataSignin.password}
-        onChange={handleChangeSigninin}
+        onChange={handleChangeSignin}
         required
         placeholder="password"
       />
@@ -96,7 +110,7 @@ function Signin() {
         id="service"
         name="service"
         value={formDataSignin.service}
-        onChange={handleChangeSigninin}
+        onChange={handleChangeSignin}
         required
         placeholder="service"
       />
@@ -108,7 +122,7 @@ function Signin() {
           type="text"
           name="facturation_code"
           value={fact.facturation_code}
-          onChange={(e) => handleChangeSigninin(e, index)}
+          onChange={(e) => handleChangeSignin(e, index)}
           required
           placeholder="facturation"
         />
@@ -123,7 +137,7 @@ function Signin() {
         id="role"
         name="role"
         value={formDataSignin.role}
-        onChange={handleChangeSigninin}
+        onChange={handleChangeSignin}
         required
         placeholder="role"
       />

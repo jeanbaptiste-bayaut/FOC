@@ -24,16 +24,22 @@ function Export() {
   const [openDate, setOpenDate] = useState(false);
   const [validateTimeRange, setValidateTimeRange] = useState(false);
 
+  // Function to handle the select time range display
   const handleSelectBtn = () => {
     setOpenDate(!openDate);
   };
 
+  // Function to handle the change of the date and get the data
   const handleChangeDate = async () => {
     const startDate = format(timeRange[0].startDate, 'yyyy-MM-dd');
     const endDate = format(timeRange[0].endDate, 'yyyy-MM-dd');
 
-    const result = await axios.get(
-      `http://localhost:3000/api/export/${startDate}/${endDate}`,
+    const result = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/export`,
+      {
+        startDate,
+        endDate,
+      },
       { withCredentials: true }
     );
 

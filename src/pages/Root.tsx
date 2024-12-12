@@ -1,5 +1,5 @@
 import './Root.scss';
-import Leftnav from '../components/Leftnav/Leftnav';
+import Leftnav from '../components/Main/Leftnav/Leftnav';
 import { Outlet } from 'react-router-dom';
 
 function Root() {

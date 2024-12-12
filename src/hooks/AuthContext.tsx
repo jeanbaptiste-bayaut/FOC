@@ -1,13 +1,19 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 
-// Définition du type utilisateur (vous pouvez adapter selon vos besoins)
+// Definition of the user type (you can adapt according to your needs)
 interface User {
   userId: number;
   email: string;
   role: 'admin' | 'user' | 'editor';
 }
 
-// Définition des types du contexte
+// Definition of context types
 interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
@@ -15,25 +21,49 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-// Valeur par défaut du contexte (utile pour l'initialisation)
+// Default value for the context (useful for initialization)
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Fournisseur du contexte
+// Context provider
 interface AuthProviderProps {
-  children: ReactNode; // Pour accepter des enfants dans le fournisseur
+  children: ReactNode; // to accept children components
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const storedData = localStorage.getItem('user');
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.expiry > new Date().getTime()) {
+          setUser(parsedData.value);
+        } else {
+          localStorage.removeItem('user'); // Session expired
+        }
+      } catch (error) {
+        console.error('Failed to parse localStorage user data:', error);
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
+
+  // function to set the user and save it in the local storage
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Sauvegarde locale optionnelle
+
+    const item = {
+      value: userData,
+      expiry: new Date().getTime() + 7200000, // 2 hours
+    };
+
+    localStorage.setItem('user', JSON.stringify(item)); // Local storage
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user'); // Supprime les données locales
+    localStorage.removeItem('user'); // Delete the user from the local storage
   };
 
   return (
@@ -50,7 +80,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Hook personnalisé pour utiliser le contexte
+// Personnalised hook to use the context
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

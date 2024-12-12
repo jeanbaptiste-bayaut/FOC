@@ -51,8 +51,8 @@ const BarsReport: FC<BarsReportProps> = ({ dataCouponsByBrand }) => {
 
   return (
     <div className="report-bars">
-      {brands.map((brand) => (
-        <div className={brand.name}>
+      {brands.map((brand, index) => (
+        <div key={brand.name + index} className={brand.name}>
           <h2>{brand.name}</h2>
           <BarChart
             key={brand.name}

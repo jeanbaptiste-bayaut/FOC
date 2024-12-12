@@ -5,6 +5,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
 } from 'recharts';
 import { FC } from 'react';
 
@@ -59,6 +60,7 @@ const GlobalLineChart: FC<GlobalLineChartProps> = ({ dataAmountByPeriod }) => {
           <XAxis dataKey="time" />
           <YAxis />
           <Tooltip />
+          <Legend />
           {brandsList.map((brand, index) => (
             <Area
               key={index}

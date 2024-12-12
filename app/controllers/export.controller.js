@@ -5,7 +5,11 @@ export default class ExportController extends CoreController {
   static mainDatamapper = ExportDataMapper;
 
   static async exportCoupons(req, res) {
-    const { startDate, endDate } = req.params;
+    const { startDate, endDate } = req.body;
+
+    if (!startDate || !endDate) {
+      throw new Error('Missing input data');
+    }
 
     try {
       const data = await this.mainDatamapper.getCouponsByTimePeriod(

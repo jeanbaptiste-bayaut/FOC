@@ -27,7 +27,7 @@ CREATE TABLE "user" (
 
 CREATE TABLE "facturation_code" (
     "id" SERIAL PRIMARY KEY,
-    "code" TEXT NOT NULL,
+    "code" TEXT NOT NULL UNIQUE,
 )
 
 CREATE TABLE "user_has_facturation_code" (
@@ -35,7 +35,7 @@ CREATE TABLE "user_has_facturation_code" (
     "user_id" INT NOT NULL,
     "facturation_code_id" INT NOT NULL,
     FOREIGN KEY ("user_id") REFERENCES "user"("id"),
-    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id")
+    FOREIGN KEY ("facturation_code_id") REFERENCES "facturation_code"("id");
 );
 
 -- Table COUPON
@@ -43,7 +43,7 @@ CREATE TABLE "coupon" (
     "id" SERIAL PRIMARY KEY,
     "code" VARCHAR(50) NOT NULL,
     "amount" NUMERIC(10, 2) NOT NULL,
-    "status" INT NOT NULL,
+    "status" INT NOT NULL DEFAULT 0,
     "country_id" INT NOT NULL,
     "wetsuit" TEXT default 'false',
     "user_id" INT,
@@ -59,7 +59,7 @@ CREATE TABLE "coupon" (
 CREATE TABLE "freeshipping" (
     "id" SERIAL PRIMARY KEY,
     "code" VARCHAR(50) NOT NULL,
-    "status" INT NOT NULL,
+    "status" INT NOT NULL DEFAULT 0,
     "country_id" INT NOT NULL,
     "user_id" INT,
     FOREIGN KEY ("country_id") REFERENCES "country"("id"),
@@ -68,5 +68,8 @@ CREATE TABLE "freeshipping" (
 
 ALTER TABLE "coupon"
 ADD CONSTRAINT "unique_code_country" UNIQUE ("code", "country_id");
+
+ALTER TABLE "freeshipping"
+ADD CONSTRAINT "unique_freeshipping_country" UNIQUE ("code", "country_id");
 
 COMMIT;

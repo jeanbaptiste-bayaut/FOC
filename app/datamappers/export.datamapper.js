@@ -2,6 +2,8 @@ import CoreDataMapper from './core.datamapper.js';
 
 export default class ExportDataMapper extends CoreDataMapper {
   static async getCouponsByTimePeriod(startDate, endDate) {
+    // returns all the coupons used between the start and end date user has choosen with the facturation code, the brand,
+    // the country, the user email, the service, the coupon code, and the promo total
     const result = await this.client.query(
       `
         SELECT 
